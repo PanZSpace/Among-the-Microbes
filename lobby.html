@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Among the Microbes — Trading Lobby</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&family=Press+Start+2P&display=swap">
+<style>
+:root{--bg:#101426;--pn:#202843;--pn2:#2b3758;--tx:#f3f4ff;--mu:#a9b5d0;--pk:#c7b5ff;--cy:#8be3e2;--am:#ffe09a;color-scheme:dark;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+body{min-height:100vh;margin:0;background:radial-gradient(ellipse at 12% 8%,#35305d66,transparent 34rem),radial-gradient(ellipse at 92% 38%,#174b5c44,transparent 32rem),var(--bg);color:var(--tx);font:16px/1.6 "Noto Sans Thai",system-ui,sans-serif}
+body::before{position:fixed;inset:0;z-index:-1;pointer-events:none;content:"";opacity:.22;background-image:radial-gradient(#dce5ff 1px,transparent 1px);background-size:31px 31px}
+main{width:min(100% - 24px,700px);margin:0 auto;padding:22px 0 max(52px,env(safe-area-inset-bottom,0px))}
+h1{margin:8px 0;color:var(--pk);font:clamp(15px,3vw,20px)/1.6 "Press Start 2P",monospace;text-shadow:3px 3px 0 #51517e,0 0 18px #c7b5ff44}
+h2{font-size:14px;color:var(--cy)}
+.card{overflow:hidden;margin:14px 0;padding:14px;border:2px solid #435071;border-radius:4px;background:linear-gradient(145deg,#222b47,#1a223a);box-shadow:0 5px 0 #0b1020,0 14px 28px #070a1455}
+.mu{color:var(--mu);font-size:14px}
+button,input,select{max-width:100%;min-height:44px;padding:8px 10px;border:2px solid #475579;border-radius:3px;background:#11182d;color:var(--tx);font:inherit}
+button{margin:4px 4px 4px 0;background:linear-gradient(180deg,#303c60,#252f4e);box-shadow:0 3px 0 #11182a;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s,border-color .12s,filter .12s}
+button:hover{transform:translateY(-2px);border-color:var(--cy);filter:brightness(1.09)}
+button:active{transform:translateY(1px)}
+button.pk{border-color:#d8cbff;background:linear-gradient(180deg,#d4c7ff,#ac9be9);box-shadow:0 4px 0 #675b9c;color:#20213b;font-weight:700}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--am);outline-offset:3px}
+.box{margin:10px 0;padding:9px 12px;border:1px solid #596689;border-left:4px solid var(--am);border-radius:3px;background:linear-gradient(100deg,#ffe09a12,#c7b5ff08);font-size:14px}
+pre{overflow:auto;white-space:pre-wrap;word-break:break-all;border:1px solid #3c496b;border-radius:3px;background:#11182d;padding:9px;font-size:12px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0;padding:8px 0;border-bottom:1px solid #3c496b}
+.row>span{min-width:0;overflow-wrap:anywhere}
+label{display:inline-block;margin:8px 4px 4px 0;color:#dce5ff;font-weight:700}
+@media(max-width:520px){main{width:min(100% - 18px,700px);padding-top:12px}.card{padding:11px}.row button{min-height:48px}}
+@media(max-height:520px) and (orientation:landscape){main{padding-top:8px}.card{margin:8px 0;padding:10px}}
+@media(hover:none){button:hover{transform:none;filter:none;box-shadow:0 3px 0 #11182a}}
+</style>
+</head>
+<body><main id="app"></main>
+<script>
+"use strict";
+const $=document.getElementById("app");
+const GL=["blaZ","mecA","vanA","pbp-mosaic","blaTEM-1","CTX-M-15","gyrA/parC","armA","KPC-2","NDM-1","oprD+mexAB","OXA-23","adeABC","mcr-1"];
+const EM=["👋","😀","🦠","❓","🙏"];
+const el=(tag,text,attrs)=>{const e=document.createElement(tag);if(text!=null)e.textContent=text;if(typeof attrs=="string")e.className=attrs;else if(attrs)for(const key in attrs)key=="onclick"?e.onclick=attrs[key]:e.setAttribute(key,attrs[key]);return e};
+const clean=(value,max)=>String(value||"").replace(/[^\p{L}\p{N} _-]/gu,"").trim().slice(0,max);
+let X={inv:{},seen:[],pend:[]};
+try{X=Object.assign(X,JSON.parse(localStorage.getItem("ambx")||"{}"))}catch(e){console.error("Could not read card inventory",e)}
+const save=()=>{try{localStorage.setItem("ambx",JSON.stringify(X))}catch(e){console.error("Could not save card inventory",e)}};
+function seed(){try{const codex=JSON.parse(localStorage.getItem("amb")||"{}").codex;if(Array.isArray(codex))codex.forEach(entry=>{if(entry&&typeof entry.id=="string"&&!X.seen.includes(entry.id)){X.seen.push(entry.id);(Array.isArray(entry.on)?entry.on:[]).forEach(gene=>{if(GL.includes(gene))X.inv[gene]=(X.inv[gene]||0)+1})}})}catch(e){console.error("Could not import Codex cards",e)}X.seen=X.seen.slice(-300);save()}
+seed();
+const inv=gene=>X.inv[gene]||0,add=(gene,count)=>{X.inv[gene]=Math.max(0,inv(gene)+count);save()};
+let player="",room="",nick="",players={},offers={},msg="",polling=false;
+const sessionKey=code=>"amb-lan-player-"+code;
+async function request(path,data){
+  const response=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ");
+  return result
+}
+async function join(){
+  nick=clean(document.getElementById("nn").value,16)||"Microbe";
+  room=clean(document.getElementById("rc").value,8).toUpperCase();
+  if(!/^[A-Z0-9]{4,8}$/.test(room)){msg="รหัสห้อง 4–8 ตัว (A–Z, 0–9)";return home()}
+  try{
+    const result=await request("/api/join",{room,name:nick,player:sessionStorage.getItem(sessionKey(room))||""});
+    player=result.player;sessionStorage.setItem(sessionKey(room),player);msg="";draw();poll()
+  }catch(error){msg="เข้าห้องไม่สำเร็จ: "+error.message;home()}
+}
+function settle(){
+  X.pend=X.pend.filter(p=>{
+    if(p.room!=room)return true;
+    const offer=offers[p.id];if(!offer)return true;
+    if(offer.st=="done"){add(p.want,1);msg="มีคนรับข้อเสนอแล้ว ได้การ์ด "+p.want;return false}
+    if(offer.st=="cancelled"){add(p.give,1);msg="คืนการ์ด "+p.give+" แล้ว";return false}
+    return true
+  });
+  save()
+}
+async function poll(){
+  if(polling||!player)return;polling=true;
+  try{
+    const url="/api/room?room="+encodeURIComponent(room)+"&player="+encodeURIComponent(player);
+    const response=await fetch(url,{cache:"no-store"}),result=await response.json();
+    if(!response.ok)throw new Error(result.error||"เชื่อมต่อห้องไม่สำเร็จ");
+    const changed=JSON.stringify(players)!=JSON.stringify(result.players)||JSON.stringify(offers)!=JSON.stringify(result.offers);
+    players=result.players||{};offers=result.offers||{};
+    if(changed){settle();draw()}
+  }catch(error){
+    msg="การเชื่อมต่อขาดหาย: "+error.message;
+    draw()
+  }finally{polling=false;if(player)setTimeout(poll,1500)}
+}
+async function offer(){
+  const give=document.getElementById("og").value,want=document.getElementById("ow").value;
+  if(!give||inv(give)<1||give==want){msg="เลือกการ์ดที่มี และต้องไม่ซ้ำกับที่ต้องการ";return draw()}
+  try{
+    const result=await request("/api/offer",{room,player,give,want});
+    add(give,-1);X.pend.push({id:result.id,room,give,want});save();msg="";draw();poll()
+  }catch(error){msg="ส่งข้อเสนอไม่สำเร็จ: "+error.message;draw()}
+}
+async function accept(id,offerData){
+  if(inv(offerData.want)<1){msg="คุณไม่มีการ์ด "+offerData.want;return draw()}
+  try{
+    await request("/api/accept/"+encodeURIComponent(id),{room,player});
+    add(offerData.want,-1);add(offerData.give,1);msg="แลกสำเร็จ: ได้ "+offerData.give;draw();poll()
+  }catch(error){msg="รับข้อเสนอไม่สำเร็จ: "+error.message;draw()}
+}
+async function cancel(id){
+  try{await request("/api/cancel/"+encodeURIComponent(id),{room,player});msg="ยกเลิกข้อเสนอแล้ว";poll()}
+  catch(error){msg="ยกเลิกไม่สำเร็จ: "+error.message;draw()}
+}
+async function emote(value){
+  try{await request("/api/emote",{room,player,emote:value});poll()}
+  catch(error){msg="ส่งอีโมจิไม่สำเร็จ: "+error.message;draw()}
+}
+async function leave(){
+  try{await request("/api/leave",{room,player})}catch(error){console.error("Could not leave room",error)}
+  player="";players={};offers={};home()
+}
+function home(){
+  $.replaceChildren(el("h1","Among the Microbes — ห้องเล่นกับเพื่อน"),el("p","เข้าห้องเดียวกันเพื่อพบเพื่อน ส่งอีโมจิ และแลกการ์ดยีนจาก Codex ของแต่ละคน","mu"));
+  if(msg)$.append(el("div",msg,"box"));
+  const card=el("div",null,{class:"card"});
+  card.append(el("label","ชื่อเล่น (ไม่เกิน 16 ตัว) "),el("input",null,{id:"nn",maxlength:16,autocomplete:"off",value:nick}),el("br"),el("label","รหัสห้อง "),el("input",null,{id:"rc",maxlength:8,autocomplete:"off",value:room||Math.random().toString(36).slice(2,8).toUpperCase()}),el("br"),el("button","เข้าห้อง",{class:"pk",onclick:join}));
+  $.append(card,el("p","ต้องเปิดเกมผ่านเซิร์ฟเวอร์ LAN ด้วย `py server.py` และให้เพื่อนอยู่เครือข่าย Wi-Fi/LAN เดียวกัน ชื่อเล่นและการแลกการ์ดจะถูกส่งไปยังเครื่องที่เปิดเซิร์ฟเวอร์","mu"))
+}
+function draw(){
+  if(!player)return home();
+  $.replaceChildren(el("h1","ห้อง "+room));
+  if(msg)$.append(el("div",msg,"box"));
+  const playerCard=el("div",null,{class:"card"});
+  playerCard.append(el("h2","ผู้เล่นในห้อง ("+Object.keys(players).length+")"));
+  Object.entries(players).forEach(([uid,p])=>playerCard.append(el("div",(p.e||"🦠")+" "+clean(p.n,16)+(uid==player?" (คุณ)":""),{class:"row"})));
+  EM.forEach(value=>playerCard.append(el("button",value,{onclick:()=>emote(value),"aria-label":"ส่งอีโมจิ "+value})));
+  playerCard.append(el("button","ออกจากห้อง",{onclick:leave}));
+  const inventory=el("div",null,{class:"card"});inventory.append(el("h2","การ์ดยีนของคุณ"));
+  const mine=GL.filter(gene=>inv(gene)>0);
+  inventory.append(el("p",mine.length?mine.map(gene=>gene+" ×"+inv(gene)).join(" · "):"ยังไม่มีการ์ด — เล่นเกมหลักและสุ่มเชื้อที่มียีนก่อน",mine.length?"":"mu"));
+  const give=el("select",null,{id:"og"}),want=el("select",null,{id:"ow"});
+  mine.forEach(gene=>give.append(el("option",gene,{value:gene})));GL.forEach(gene=>want.append(el("option",gene,{value:gene})));
+  inventory.append(el("label","ให้ "),give,el("label"," ขอ "),want,el("button","โพสต์ข้อเสนอ",{class:"pk",onclick:offer}));
+  const offerCard=el("div",null,{class:"card"});offerCard.append(el("h2","ข้อเสนอที่เปิดอยู่"));
+  let count=0;
+  Object.entries(offers).forEach(([id,data])=>{
+    if(data.st!="open"||Date.now()-data.ts>1800_000)return;
+    count++;const row=el("div",null,{class:"row"});row.append(el("span",clean(data.fn,16)+": ให้ "+data.give+" ↔ ขอ "+data.want));
+    row.append(data.from==player?el("button","ยกเลิก",{onclick:()=>cancel(id)}):el("button","รับข้อเสนอ",{onclick:()=>accept(id,data)}));offerCard.append(row)
+  });
+  if(!count)offerCard.append(el("p","ยังไม่มีข้อเสนอ","mu"));
+  $.append(playerCard,inventory,offerCard,el("div","Fact-check: HGT เกิดจริงในธรรมชาติ แต่เชื้อแต่ละชนิดรับยีนได้ไม่เท่ากัน การ์ดในเกมเป็นแบบจำลอง ไม่ใช่ลำดับพันธุกรรมหรือคำแนะนำทางห้องปฏิบัติการ","box"))
+}
+home();
+</script>
+</body>
+</html>
