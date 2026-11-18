@@ -2,18 +2,251 @@
 /* ===== ARCADE MINI-GAME SELECTOR ===== */
 function arcade(){
   stopLife();
-  set(`${nav()}<h2>Arcade · เลือกมินิเกม</h2><p class="mu">เลือกกิจกรรมที่พบได้ระหว่างการเดินทาง หรือสุ่มเล่นภารกิจควบคุมโรค</p><section class="minigame-grid"><button class="minigame-card" id="miniFood"><canvas data-icon="arcade" width="80" height="80" aria-hidden="true"></canvas><b>เก็บอาหาร</b><span>ขยับหลบสิ่งกีดขวาง · 30 วินาที</span></button><button class="minigame-card" id="miniDots"><canvas data-icon="genes" width="80" height="80" aria-hidden="true"></canvas><b>กินจุด</b><span>เดินในเขาวงกตเก็บสารอาหาร</span></button><button class="minigame-card" id="miniBlocks"><canvas data-icon="achievements" width="80" height="80" aria-hidden="true"></canvas><b>ต่อบล็อก</b><span>สร้างไบโอฟิล์มและเคลียร์แถว</span></button><button class="minigame-card" id="miniRhythm"><canvas data-icon="journey" width="80" height="80" aria-hidden="true"></canvas><b>จังหวะเซลล์</b><span>กดเมื่อแถบเลื่อนอยู่ในโซนสีทอง</span></button><button class="minigame-card" id="miniOutbreak"><canvas data-icon="pathogens" width="80" height="80" aria-hidden="true"></canvas><b>ภารกิจโรคสุ่ม</b><span>สุ่ม COVID-19, Ebola, cholera หรือ plague</span></button></section><p class="box fi">SARS-CoV-2 และ Ebola virus เป็นไวรัส ส่วนอหิวาตกโรคเกิดจากแบคทีเรีย <i>Vibrio cholerae</i> และกาฬโรคเกิดจากแบคทีเรีย <i>Yersinia pestis</i> เกมแยกวงจรไวรัสออกจากระบบแบคทีเรีย</p>`);
+  set(`${nav()}<h2>Arcade · เลือกมินิเกม</h2><p class="mu">เลือกกิจกรรมที่พบได้ระหว่างการเดินทาง หรือสุ่มเล่นภารกิจควบคุมโรค</p><section class="minigame-grid"><button class="minigame-card" id="miniFood"><canvas data-icon="arcade" width="80" height="80" aria-hidden="true"></canvas><b>เก็บอาหาร</b><span>ขยับหลบสิ่งกีดขวาง · 30 วินาที</span></button><button class="minigame-card" id="miniDots"><canvas data-icon="genes" width="80" height="80" aria-hidden="true"></canvas><b>กินจุด</b><span>เดินในเขาวงกตเก็บสารอาหาร</span></button><button class="minigame-card" id="miniBlocks"><canvas data-icon="achievements" width="80" height="80" aria-hidden="true"></canvas><b>ต่อบล็อก</b><span>สร้างไบโอฟิล์มและเคลียร์แถว</span></button><button class="minigame-card" id="miniRhythm"><canvas data-icon="journey" width="80" height="80" aria-hidden="true"></canvas><b>จังหวะเซลล์</b><span>กดเมื่อแถบเลื่อนอยู่ในโซนสีทอง</span></button><button class="minigame-card" id="miniOutbreak"><canvas data-icon="pathogens" width="80" height="80" aria-hidden="true"></canvas><b>ภารกิจโรคสุ่ม</b><span>สุ่ม COVID-19, Ebola, cholera หรือ plague</span></button><button class="minigame-card" id="miniPattern"><canvas data-icon="genes" width="80" height="80" aria-hidden="true"></canvas><b>จำลำดับสัญญาณ</b><span>กด 4 ปุ่มให้ตรงแพทเทิลที่โชว์</span></button><button class="minigame-card" id="miniWords"><canvas data-icon="guide" width="80" height="80" aria-hidden="true"></canvas><b>เรียงคำศัพท์</b><span>แตะคำให้เป็นประโยคความรู้</span></button><button class="minigame-card" id="miniQuiz"><canvas data-icon="chronicles" width="80" height="80" aria-hidden="true"></canvas><b>ควิซง่าย ๆ</b><span>ตอบตัวเลือก พร้อมเกร็ดความรู้</span></button><button class="minigame-card" id="miniRunner"><canvas data-icon="journey" width="80" height="80" aria-hidden="true"></canvas><b>เชื้อวิ่งกระโดด</b><span>วิ่งหลบสิ่งกีดขวางแบบเกมออฟไลน์</span></button></section><p class="box fi">SARS-CoV-2 และ Ebola virus เป็นไวรัส ส่วนอหิวาตกโรคเกิดจากแบคทีเรีย <i>Vibrio cholerae</i> และกาฬโรคเกิดจากแบคทีเรีย <i>Yersinia pestis</i> เกมแยกวงจรไวรัสออกจากระบบแบคทีเรีย</p>`);
   bindNav();
   A.querySelectorAll("canvas[data-icon]").forEach(cv=>drawPixelIcon(cv,cv.dataset.icon));
-  on("miniFood",arcadeFood);
-  on("miniDots",arcadeDots);
-  on("miniBlocks",arcadeBlocks);
-  on("miniRhythm",arcadeRhythm);
-  on("miniOutbreak",arcadeRandomOutbreak);
+  on("miniFood",()=>arcadeIntro("เก็บอาหาร",["ขยับซ้าย–ขวาเพื่อเก็บอาหารสีเขียว","หลบสิ่งกีดขวางจนหมดเวลา 30 วินาที"],arcadeFood));
+  on("miniDots",()=>arcadeIntro("กินจุด",["ใช้ลูกศรหรือปุ่มบนจอเดินในเขาวงกต","เก็บจุดสีเขียวให้ได้ 24 จุดก่อนหมดเวลา"],arcadeDots));
+  on("miniBlocks",()=>arcadeIntro("ต่อบล็อก",["เลื่อนและหมุนบล็อกให้เติมแถวแนวนอน","เคลียร์ให้ครบ 3 แถว หรือเล่นให้นานที่สุด"],arcadeBlocks));
+  on("miniRhythm",()=>arcadeIntro("จังหวะเซลล์",["กดเมื่อแถบเลื่อนอยู่ในพื้นที่สีทอง","เล่น 30 วินาที พลาดได้โดยไม่เสียคะแนน"],arcadeRhythm));
+  on("miniOutbreak",()=>arcadeIntro("ภารกิจโรคสุ่ม",["จัดการทรัพยากรและรับมือสถานการณ์จำลอง","โรคที่พบจะถูกสุ่มเมื่อเริ่มภารกิจ"],arcadeRandomOutbreak));
+  on("miniPattern",()=>arcadeIntro("จำลำดับสัญญาณ",["ดูปุ่มที่สว่างแล้วกดตามลำดับ","เล่นด้วยการแตะหรือกดปุ่ม 1–4"],arcadePattern));
+  on("miniWords",()=>arcadeIntro("เรียงคำศัพท์",["แตะคำด้านล่างเพื่อเรียงเป็นประโยค","แตะคำในช่องด้านบนเพื่อนำออกและจัดใหม่"],arcadeWords));
+  on("miniQuiz",()=>arcadeIntro("ควิซง่าย ๆ",["เลือกคำตอบที่คิดว่าถูกที่สุด","อ่านเกร็ดสั้น ๆ หลังตอบแต่ละข้อ"],arcadeQuiz));
+  on("miniRunner",()=>arcadeIntro("เชื้อวิ่งกระโดด",["กด Space, ↑ หรือ W เพื่อกระโดดหลบ","แตะจอหรือปุ่มบนหน้าจอก็ได้"],arcadeRunner));
 }
+function arcadeIntro(title,instructions,launch){const o=modal(`<div class="hd"><span>วิธีเล่น · ${title}</span><button id="introClose" aria-label="ปิด">×</button></div><div class="bd arcade-intro"><h3>${title}</h3><ul>${instructions.map(step=>`<li>${step}</li>`).join("")}</ul><button class="pk big" id="introStart">เข้าใจแล้ว · เริ่มเกม</button></div>`);o.querySelector("#introClose").onclick=o.close;o.querySelector("#introStart").onclick=()=>{o.close();launch()}}
 function arcadeRandomOutbreak(){
   const p=PATHOGENS[Math.floor(rnd()*PATHOGENS.length)];
   outbreakGame(p);
+}
+function arcadeReward(score){
+  score=Math.max(0,Math.floor(score||0));
+  S.mp+=Math.floor(score/50);
+  if(score>(S.arc||0))S.arc=score;
+  save();
+}
+const ARCADE_SHUFFLE=a=>{const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
+const PATTERN_PADS=[
+  {icon:"🦠",label:"เชื้อ",color:"#8adcb5",freq:520},
+  {icon:"🧬",label:"ยีน",color:"#8be3e2",freq:620},
+  {icon:"💊",label:"ยา",color:"#ffe09a",freq:760},
+  {icon:"🛡️",label:"ภูมิ",color:"#c7b5ff",freq:900}
+];
+function arcadePattern(){
+  stopLife();
+  set(`${nav()}<button class="codex-back" id="arcadeMenu">← เลือกมินิเกม</button><h2>จำลำดับสัญญาณ</h2><p class="mu">ดูไฟกระพริบแล้วกดให้ตรงลำดับ 8 ขั้นถือว่าสำเร็จ · พลาดได้ 3 ครั้ง · ใช้เมาส์ แตะ หรือกด 1–4</p><section class="pattern-game" id="patternWrap"><p class="c">ขั้น <b id="patLevel">0</b>/8 · คะแนน <b id="patScore">0</b> · โอกาส <b id="patLives">♥♥♥</b></p><p class="c pat-status" id="patStatus" role="status" aria-live="polite">กดเริ่มเพื่อดูแพทเทิล</p><div class="pattern-pad">${PATTERN_PADS.map((p,i)=>`<button class="pat-pad" data-pad="${i}" style="--pad:${p.color}" aria-label="${p.label}" disabled><span>${p.icon}</span><small>${p.label}</small></button>`).join("")}</div><button class="pk big" id="patStart">▶ เริ่มเล่น</button><p class="box fi">สัญญาณในเกมนี้ใช้ฝึกความจำเท่านั้น ไม่ได้จำลองระบบส่งสัญญาณของเซลล์จริง</p></section>`);
+  bindNav();on("arcadeMenu",arcade);
+  const host=document.getElementById("patternWrap"),levelEl=document.getElementById("patLevel"),scoreEl=document.getElementById("patScore"),livesEl=document.getElementById("patLives"),statusEl=document.getElementById("patStatus"),startBtn=document.getElementById("patStart"),pads=[...host.querySelectorAll("[data-pad]")];
+  let seq=[],step=0,lives=3,score=0,level=0,playing=false,busy=false,timers=[],guard=0,rewarded=false;
+  const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
+  const clearTimers=()=>{timers.forEach(clearTimeout);timers=[]};
+  const sync=()=>{levelEl.textContent=level;scoreEl.textContent=score;livesEl.textContent="♥".repeat(lives)+"♡".repeat(Math.max(0,3-lives))};
+  const enable=value=>pads.forEach(p=>p.disabled=!(value&&playing));
+  const show=()=>{
+    busy=true;enable(false);statusEl.textContent="จำลำดับให้ดี…";
+    let at=0;
+    seq.forEach(i=>{
+      later(()=>{pads.forEach(p=>p.classList.remove("lit"));pads[i].classList.add("lit");beep(PATTERN_PADS[i].freq,.09);later(()=>pads[i].classList.remove("lit"),420)},at);
+      at+=620;
+    });
+    later(()=>{busy=false;enable(true);statusEl.textContent="ทำตามลำดับได้เลย · กด "+seq.length+" ครั้ง"},at+220);
+  };
+  const kd=e=>{const i=["1","2","3","4"].indexOf(e.key);if(i>=0){e.preventDefault();pads[i].click()}};
+  const finish=win=>{
+    if(rewarded)return;rewarded=true;playing=false;busy=true;clearTimers();clearInterval(guard);removeEventListener("keydown",kd);
+    pads.forEach(p=>{p.classList.remove("lit","wrong");p.disabled=true});
+    startBtn.disabled=false;startBtn.textContent="↻ เล่นอีกครั้ง";
+    statusEl.textContent=win?"สำเร็จ! จำครบ 8 ขั้นแล้ว":"จบเกม · ไปได้ "+level+" ขั้น";
+    sync();arcadeReward(score);
+  };
+  addEventListener("keydown",kd);
+  startBtn.onclick=()=>{
+    clearTimers();seq=[];step=0;lives=3;score=0;level=0;playing=true;busy=false;rewarded=false;
+    startBtn.disabled=true;startBtn.textContent="กำลังเล่น…";sync();
+    level++;seq.push(Math.floor(rnd()*4));step=0;sync();show();
+  };
+  pads.forEach((p,i)=>p.onclick=()=>{
+    if(!playing||busy)return;
+    if(i===seq[step]){
+      p.classList.add("lit");beep(PATTERN_PADS[i].freq,.07);later(()=>p.classList.remove("lit"),160);
+      step++;
+      if(step===seq.length){
+        const gain=level*10;score+=gain;sync();statusEl.textContent="ถูกต้อง! +"+gain;busy=true;enable(false);
+        if(level>=8)later(()=>finish(true),600);
+        else later(()=>{level++;seq.push(Math.floor(rnd()*4));step=0;sync();show()},650);
+      }
+    }else{
+      p.classList.add("wrong");later(()=>p.classList.remove("wrong"),350);beep(150,.16);
+      lives--;sync();busy=true;enable(false);
+      if(lives<=0)later(()=>finish(false),450);
+      else{statusEl.textContent="ผิดแล้ว เหลือ "+lives+" โอกาส · แสดงลำดับอีกครั้ง";later(show,850)}
+    }
+  });
+  guard=setInterval(()=>{if(!host.isConnected){clearTimers();clearInterval(guard);removeEventListener("keydown",kd)}},300);
+}
+const WORD_ROUNDS=[
+  {words:["แบคทีเรีย","บางชนิด","สร้าง","ไบโอฟิล์ม","เพื่อ","เกาะกลุ่ม"],f:"ไบโอฟิล์มคือชุมชนเซลล์ที่เกาะผิวและหุ้มตัวเองด้วยเมือก ช่วยให้เซลล์บางส่วนทนต่อความเครียดได้มากขึ้น"},
+  {words:["ไวรัส","ต้องอาศัย","เซลล์โฮสต์","ในการ","เพิ่มจำนวน"],f:"ไวรัสไม่ได้สร้างพลังงานและส่วนประกอบเองครบถ้วน จึงต้องใช้กลไกของเซลล์โฮสต์"},
+  {words:["การกลายพันธุ์","เกิด","แบบสุ่ม","ไม่ใช่","เพราะ","เชื้อ","ต้องการ"],f:"การกลายพันธุ์เกิดจากความผิดพลาดหรือความเสียหายของกรดนิวคลีอิกแบบสุ่ม ยาอาจคัดเลือกเชื้อที่อยู่รอดได้มากกว่า"},
+  {words:["ยาปฏิชีวนะ","ออกฤทธิ์กับ","แบคทีเรีย","ไม่ใช่","ไวรัส"],f:"ยาปฏิชีวนะออกฤทธิ์กับโครงสร้างหรือกระบวนการของแบคทีเรีย ไม่ได้ฆ่าไวรัส และต้องใช้ตามข้อบ่งชี้"},
+  {words:["การล้างมือ","ช่วย","ลด","การแพร่กระจาย","ของเชื้อ","ได้"],f:"การล้างมือด้วยวิธีที่เหมาะสมช่วยลดจำนวนเชื้อบนมือและลดการแพร่กระจายได้"}
+];
+function arcadeWords(){
+  stopLife();
+  const rounds=ARCADE_SHUFFLE(WORD_ROUNDS).slice(0,4);
+  set(`${nav()}<button class="codex-back" id="arcadeMenu">← เลือกมินิเกม</button><h2>เรียงคำศัพท์</h2><p class="mu">แตะคำในแถวล่างเพื่อเรียงเป็นประโยค แล้วแตะคำในช่องบนเพื่อนำออก · 4 ประโยค</p><section class="word-game"><p class="c">ประโยค <b id="wordRound">1/4</b> · คะแนน <b id="wordScore">0</b></p><p class="c" id="wordStatus" role="status" aria-live="polite">เรียงคำให้เป็นประโยคที่ถูกต้อง</p><div class="word-slots" id="wordSlots" aria-label="ช่องสำหรับเรียงคำ"></div><div class="word-bank" id="wordBank" aria-label="คำที่เลือกได้"></div><div class="box fi" id="wordFact" hidden></div><button class="pk big" id="wordNext" disabled>ประโยคต่อไป →</button></section>`);
+  bindNav();on("arcadeMenu",arcade);
+  const roundEl=document.getElementById("wordRound"),scoreEl=document.getElementById("wordScore"),statusEl=document.getElementById("wordStatus"),slotsEl=document.getElementById("wordSlots"),bankEl=document.getElementById("wordBank"),factEl=document.getElementById("wordFact"),nextBtn=document.getElementById("wordNext");
+  let index=0,score=0,picked=[],bankOrder=[],locked=false,wrongFlash=false,flashTimer=0,rewarded=false,round=rounds[0];
+  const mk=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
+  const render=()=>{
+    slotsEl.replaceChildren();
+    round.words.forEach((word,i)=>{
+      const b=mk("button","word-slot"+(picked[i]?" filled":"")+(wrongFlash?" wrong":""),picked[i]||"…");
+      b.disabled=locked;b.setAttribute("aria-label",picked[i]?"นำคำนี้ออก":"ช่องว่าง");
+      b.onclick=()=>{if(locked||!picked[i])return;picked.splice(i,1);beep(420,.03);render()};
+      slotsEl.appendChild(b);
+    });
+    bankEl.replaceChildren();
+    bankOrder.forEach(word=>{
+      if(picked.includes(word))return;
+      const b=mk("button","word-tile",word);b.disabled=locked;
+      b.onclick=()=>{if(locked)return;picked.push(word);beep(560,.03);render();check()};
+      bankEl.appendChild(b);
+    });
+  };
+  const check=()=>{
+    if(picked.length!==round.words.length)return;
+    if(picked.join("|")===round.words.join("|")){
+      locked=true;score+=25;scoreEl.textContent=score;beep(800,.12);
+      statusEl.textContent="ถูกต้อง! +25 แต้ม";factEl.textContent=round.f;factEl.hidden=false;
+      nextBtn.disabled=false;nextBtn.textContent=index===rounds.length-1?"ดูผลลัพธ์":"ประโยคต่อไป →";
+    }else{
+      wrongFlash=true;beep(180,.13);statusEl.textContent="ยังไม่ใช่ · แตะคำในช่องเพื่อสลับแล้วลองใหม่";
+      clearTimeout(flashTimer);flashTimer=setTimeout(()=>{wrongFlash=false;render()},600);
+    }
+    render();
+  };
+  const loadRound=()=>{
+    clearTimeout(flashTimer);round=rounds[index];picked=[];bankOrder=ARCADE_SHUFFLE(round.words);locked=false;wrongFlash=false;
+    roundEl.textContent=(index+1)+"/"+rounds.length;scoreEl.textContent=score;
+    statusEl.textContent="เรียงคำให้เป็นประโยคที่ถูกต้อง";factEl.hidden=true;factEl.textContent="";
+    nextBtn.disabled=true;nextBtn.textContent="ประโยคต่อไป →";render();
+  };
+  const finish=()=>{
+    if(rewarded)return;rewarded=true;nextBtn.disabled=true;
+    statusEl.textContent="จบเกม · ได้ "+score+" แต้ม";
+    factEl.hidden=false;factEl.textContent="ประโยคทั้งหมดเป็นแบบจำลองเพื่อการเรียนรู้ ไม่ใช่คำแนะนำทางการแพทย์";
+    arcadeReward(score);
+  };
+  nextBtn.onclick=()=>{if(index<rounds.length-1){index++;loadRound()}else finish()};
+  loadRound();
+}
+const QUIZ_BANK=[
+  {q:"ไวรัสเพิ่มจำนวนได้อย่างไรในแบบจำลองนี้?",o:["ต้องอาศัยเซลล์โฮสต์","สร้างอาหารเองได้ทั้งหมด","แบ่งตัวได้โดยไม่มีโฮสต์"],a:0,f:"ไวรัสต้องใช้กลไกของเซลล์โฮสต์ในการสร้างอนุภาคใหม่"},
+  {q:"ยาปฏิชีวนะใช้กับอะไรโดยตรง?",o:["แบคทีเรียบางชนิด","ไวรัสทุกชนิด","เชื้อราเท่านั้น"],a:0,f:"ยาปฏิชีวนะมีเป้าหมายที่แบคทีเรีย ไม่ใช่ไวรัส และผลขึ้นกับชนิดยาและเชื้อ"},
+  {q:"ไบโอฟิล์มคืออะไร?",o:["ชุมชนเซลล์ที่เกาะผิวและมีเมือกหุ้ม","ชิ้นส่วน DNA ที่หลุดออกมา","น้ำยาฆ่าเชื้อชนิดหนึ่ง"],a:0,f:"ไบโอฟิล์มช่วยให้เซลล์บางส่วนอยู่รอดในสภาพแวดล้อมที่รบกวนได้"},
+  {q:"การกลายพันธุ์เกิดขึ้นเมื่อไหร่?",o:["แบบสุ่ม ไม่ได้เกิดเพราะเชื้อต้องการ","เกิดขึ้นเมื่อเชื้ออยากดื้อยา","เกิดหลังให้ยาทุกครั้ง"],a:0,f:"ความแปรผันเกิดแบบสุ่ม การใช้ยาเป็นตัวคัดเลือกมากกว่าตัวเหตุให้เกิดการกลายพันธุ์ตามต้องการ"},
+  {q:"SARS-CoV-2 จัดอยู่ในกลุ่มใด?",o:["ไวรัส","แบคทีเรีย","โปรโตซัว"],a:0,f:"SARS-CoV-2 เป็นไวรัสที่ต้องอาศัยเซลล์โฮสต์ จึงไม่ใช้วงจรแบคทีเรียในเกม"},
+  {q:"การล้างมือช่วยอะไร?",o:["ลดเชื้อบนมือและการแพร่กระจาย","ฆ่าเชื้อในอากาศทั้งหมด","ทำให้เชื้อกลายพันธุ์น้อยลงโดยตรง"],a:0,f:"การล้างมือช่วยลดจำนวนเชื้อบนมือและเส้นทางการแพร่กระจายบางทาง"}
+];
+function arcadeQuiz(){
+  stopLife();
+  const qs=ARCADE_SHUFFLE(QUIZ_BANK).slice(0,5);
+  set(`${nav()}<button class="codex-back" id="arcadeMenu">← เลือกมินิเกม</button><h2>ควิซง่าย ๆ</h2><p class="mu">ตอบ 5 ข้อ ตัวละครจะบอกเฉลยพร้อมเกร็ดความรู้ · ตอบผิดไม่เสียคะแนน</p><section class="quiz-game"><p class="c">ข้อ <b id="quizNo">1/5</b> · คะแนน <b id="quizScore">0</b></p><p class="c" id="quizStatus" role="status" aria-live="polite">เลือกคำตอบที่ถูกที่สุด</p><h3 id="quizQuestion"></h3><div class="quiz-options" id="quizOptions"></div><div class="box fi" id="quizFact" hidden></div><button class="pk big" id="quizNext" disabled>ข้อต่อไป →</button></section>`);
+  bindNav();on("arcadeMenu",arcade);
+  const noEl=document.getElementById("quizNo"),scoreEl=document.getElementById("quizScore"),statusEl=document.getElementById("quizStatus"),questionEl=document.getElementById("quizQuestion"),optionsEl=document.getElementById("quizOptions"),factEl=document.getElementById("quizFact"),nextBtn=document.getElementById("quizNext");
+  let index=0,score=0,answered=false,rewarded=false;
+  const load=()=>{
+    const q=qs[index];answered=false;
+    noEl.textContent=(index+1)+"/"+qs.length;scoreEl.textContent=score;
+    statusEl.textContent="เลือกคำตอบที่ถูกที่สุด";questionEl.textContent=q.q;
+    factEl.hidden=true;factEl.textContent="";nextBtn.disabled=true;nextBtn.textContent="ข้อต่อไป →";
+    optionsEl.replaceChildren();
+    ARCADE_SHUFFLE(q.o.map((text,i)=>({text,ok:i===q.a}))).forEach(o=>{
+      const b=document.createElement("button");b.className="big";b.textContent=o.text;
+      b.onclick=()=>{
+        if(answered)return;answered=true;
+        optionsEl.querySelectorAll("button").forEach(x=>x.disabled=true);
+        b.classList.add(o.ok?"correct":"wrong");
+        if(o.ok){score+=20;scoreEl.textContent=score;statusEl.textContent="ถูกต้อง! +20";beep(820,.1)}
+        else{statusEl.textContent="ยังไม่ใช่ · ดูเฉลยด้านล่าง";beep(180,.12)}
+        const correct=[...optionsEl.querySelectorAll("button")].find(x=>x.textContent===q.o[q.a]);
+        if(correct)correct.classList.add("correct");
+        factEl.textContent=q.f;factEl.hidden=false;nextBtn.disabled=false;
+        nextBtn.textContent=index===qs.length-1?"ดูผลลัพธ์":"ข้อต่อไป →";
+      };
+      optionsEl.appendChild(b);
+    });
+  };
+  const finish=()=>{
+    if(rewarded)return;rewarded=true;nextBtn.disabled=true;
+    statusEl.textContent="จบควิซ · ได้ "+score+" แต้ม ("+qs.length+" ข้อ)";
+    factEl.hidden=false;factEl.textContent="เกร็ดความรู้ในควิซเป็นแบบจำลองการเรียนรู้ ไม่ใช่คำแนะนำทางการแพทย์";
+    arcadeReward(score);
+  };
+  nextBtn.onclick=()=>{if(index<qs.length-1){index++;load()}else finish()};
+  load();
+}
+function arcadeRunner(){
+  stopLife();
+  const r=R0||roll(),sk=r.fict?"Om":r.virus?r.pathogenId:r.s,tr=Math.min(r.tier,6);
+  set(`${nav()}<button class="codex-back" id="arcadeMenu">← เลือกมินิเกม</button><h2>เชื้อวิ่งกระโดด</h2><section class="arcade-layout"><canvas id="runnerBoard" width="420" height="240" aria-label="เกมวิ่งกระโดดหลบสิ่งกีดขวาง"></canvas><div class="arcade-controls"><div class="runner-controls"><button class="pk big" id="runnerJump">↑ กระโดด</button><button class="big" id="runnerAgain">↻ เริ่มใหม่</button></div><p class="mu">กด Space / ↑ / W หรือแตะจอเพื่อกระโดด หลบฟาจ ยา และเซลล์ภูมิคุ้มกัน เก็บจุดเขียวเพื่อแต้มเพิ่ม · เชื้อ: ${microbeName(r)} · คะแนนสูงสุด ${S.arc||0}</p><p class="box fi">สิ่งกีดขวางเป็นสัญลักษณ์ในแบบจำลอง ไม่ใช่การพยากรณ์การติดเชื้อหรือคำแนะนำทางการแพทย์</p></div></section>`);
+  bindNav();on("arcadeMenu",arcade);
+  const cv=document.getElementById("runnerBoard"),c=cv.getContext("2d"),sp=document.createElement("canvas"),GROUND=196;
+  sp.width=128;sp.height=96;
+  let raf=0,last=0,dist=0,score=0,speed=170,obstacles=[],picks=[],spawnIn=800,pickIn=1400,y=GROUND-38,vy=0,onGround=true,end=false,rewarded=false;
+  const jump=()=>{if(end)return;if(onGround){vy=-470;onGround=false;beep(620,.07)}};
+  const kd=e=>{if(e.code=="Space"||e.key==" "||e.key=="ArrowUp"||e.code=="ArrowUp"||e.key=="w"||e.key=="W"){e.preventDefault();end?start():jump()}};
+  addEventListener("keydown",kd);
+  const draw=ts=>{
+    c.fillStyle="#11182d";c.fillRect(0,0,420,240);
+    c.fillStyle="#ffffff1f";for(let i=0;i<26;i++)c.fillRect((i*67+Math.floor(dist*.22))%420,(i*41)%150,2,2);
+    c.fillStyle="#1b2742";c.fillRect(0,GROUND-10,420,10);
+    c.fillStyle="#8adcb5";c.fillRect(0,GROUND,420,3);
+    c.fillStyle="#ffffff33";for(let x=-((dist*1.2)%40);x<420;x+=40)c.fillRect(x,GROUND+9,18,2);
+    obstacles.forEach(o=>{
+      const top=GROUND-o.h;
+      if(o.type===0){c.fillStyle="#b99df5";c.fillRect(o.x,top,o.w,14);c.fillStyle="#dceeff";c.fillRect(o.x+3,top+3,Math.max(2,o.w-6),5);c.fillStyle="#b99df5";c.fillRect(o.x+o.w/2-2,top+14,4,o.h-14);c.fillRect(o.x+o.w/2-8,top+o.h-6,16,3)}
+      else if(o.type===1){c.fillStyle="#ffe09a";c.fillRect(o.x,top,o.w,o.h);c.fillStyle="#ffa88e";c.fillRect(o.x,top,o.w/2,o.h);c.fillStyle="#fff";c.fillRect(o.x+o.w-4,top,2,o.h)}
+      else{c.fillStyle="#8be3e2";c.fillRect(o.x,top,o.w,o.h);c.fillStyle="#fff";c.fillRect(o.x+4,top+5,3,3);c.fillRect(o.x+o.w-8,top+5,3,3);c.fillStyle="#27324d";c.fillRect(o.x+5,top+6,2,2);c.fillRect(o.x+o.w-7,top+6,2,2)}
+    });
+    picks.forEach(p=>{c.fillStyle="#8adcb5";c.beginPath();c.arc(p.x,p.y,p.r,0,6.3);c.fill();c.fillStyle="#eafff6";c.fillRect(p.x-2,p.y-2,2,2)});
+    cell(sp,sk,tr,ts,end?"sad":(!onGround?"excited":"neutral"));c.imageSmoothingEnabled=false;c.drawImage(sp,52,y-6,44,33);
+    c.fillStyle="#f2f4fa";c.font="bold 13px monospace";c.fillText("Score "+score+"   Best "+S.arc,10,20);
+    if(end){c.fillStyle="#000a";c.fillRect(0,0,420,240);c.fillStyle="#fff";c.textAlign="center";c.font="bold 20px sans-serif";c.fillText("โดนสิ่งกีดขวาง!",210,105);c.font="14px sans-serif";c.fillText("คะแนน "+score+" · แตะปุ่มกระโดดเพื่อเล่นอีกครั้ง",210,136);c.textAlign="left"}
+  };
+  const frame=ts=>{
+    if(!cv.isConnected){removeEventListener("keydown",kd);cancelAnimationFrame(raf);return}
+    if(!last)last=ts;const dt=Math.min(.04,(ts-last)/1000);last=ts;
+    if(!end){
+      speed=Math.min(330,170+dist/45);dist+=speed*dt;score=Math.floor(dist/12);
+      if(!onGround){vy+=1500*dt;y+=vy*dt;if(y>=GROUND-38){y=GROUND-38;vy=0;onGround=true}}
+      spawnIn-=dt*1000;if(spawnIn<=0){spawnIn=Math.max(620,1450-dist/24)*(.85+rnd()*.4);const h=24+Math.floor(rnd()*16);obstacles.push({x:430,w:18+Math.floor(rnd()*12),h,type:Math.floor(rnd()*3)})}
+      pickIn-=dt*1000;if(pickIn<=0){pickIn=1700+rnd()*1800;picks.push({x:430,y:GROUND-54-rnd()*28,r:6})}
+      obstacles.forEach(o=>o.x-=speed*dt);picks.forEach(p=>p.x-=speed*dt);
+      obstacles=obstacles.filter(o=>o.x+o.w>-20);picks=picks.filter(p=>p.x+p.r>-20);
+      const px=74,py=y+5,pw=30,ph=28;
+      if(obstacles.some(o=>px+pw-6>o.x+3&&px+4<o.x+o.w-3&&py+ph>GROUND-o.h+4)){
+        end=true;beep(120,.2);
+        if(!rewarded){rewarded=true;arcadeReward(score)}
+      }
+      picks=picks.filter(p=>{
+        if(px+pw>p.x-p.r&&px<p.x+p.r&&py+ph>p.y-p.r&&py<p.y+p.r){score+=25;beep(900,.07);return false}
+        return true;
+      });
+    }
+    draw(ts);if(!end)raf=requestAnimationFrame(frame);
+  };
+  const start=()=>{
+    cancelAnimationFrame(raf);dist=0;score=0;speed=170;obstacles=[];picks=[];spawnIn=800;pickIn=1400;
+    y=GROUND-38;vy=0;onGround=true;end=false;rewarded=false;last=0;
+    raf=requestAnimationFrame(frame);
+  };
+  on("runnerAgain",start);on("runnerJump",()=>end?start():jump());
+  cv.onpointerdown=e=>{e.preventDefault();end?start():jump()};
+  start();
 }
 function arcadeRhythm(){
   stopLife();

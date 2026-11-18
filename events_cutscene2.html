@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>คัทซีนอีเวนต์เชื้อ EV01–EV10</title>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@500;700&family=Mitr:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#ffe27a;--ink:#0e0822;--mint:#7dffc4}
+html,body{margin:0;width:100%;height:100%;min-height:100vh;min-height:100dvh;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;overscroll-behavior:none}
+#stage{position:relative;width:min(100vw,177.78vh);width:min(100vw,177.78dvh);max-height:100vh;max-height:100dvh;aspect-ratio:16/9;container-type:inline-size;overflow:hidden;background:#000;font-family:'Mali','Mitr',sans-serif;user-select:none}
+#cv{width:100%;height:100%;display:block;image-rendering:pixelated}
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.13) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 62%,rgba(0,0,0,.35))}
+#tag{position:absolute;left:2.4cqw;top:2cqw;display:none;font:700 clamp(12px,2.4cqw,20px) 'Mitr';color:var(--ink);background:var(--gold);padding:.3cqw 1.4cqw;border:.3cqw solid #fff;box-shadow:.5cqw .5cqw 0 rgba(0,0,0,.6);transform:rotate(-2deg);animation:pop .3s cubic-bezier(.2,2,.4,1)}
+@keyframes pop{from{transform:rotate(-2deg) scale(.2)}}
+#cap{position:absolute;left:5cqw;right:5cqw;bottom:4cqw;display:none;max-height:40%;overflow-y:auto;padding:1.2cqw 2.2cqw;background:rgba(14,8,34,.9);border:.4cqw solid var(--gold);box-shadow:0 0 0 .4cqw var(--ink);color:#fff;font-weight:700;font-size:clamp(14px,3.1cqw,24px);line-height:1.3;text-align:center}
+#bar{position:absolute;left:0;bottom:0;height:.7cqw;background:var(--mint);width:0;display:none}
+#skip{position:absolute;right:2cqw;top:2cqw;z-index:5;display:none;min-width:44px;min-height:44px;font:500 clamp(12px,1.8cqw,18px) 'Mitr';color:#fff;background:rgba(0,0,0,.65);border:.2cqw solid rgba(255,255,255,.7);padding:6px 12px;cursor:pointer;touch-action:manipulation}
+#menu{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6cqw;padding:12px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:rgba(8,4,24,.62)}
+#menu h1{margin:0;font:700 4cqw 'Mitr';color:#fff;text-shadow:.4cqw .4cqw 0 #1fa77d}
+#menu p{margin:0;font:2cqw 'Mali';color:var(--gold)}
+#grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1cqw 1.4cqw}
+#grid button{font:700 2.1cqw 'Mitr';text-align:left;padding:.7cqw 1.8cqw;min-width:30cqw;min-height:44px;color:#fff;background:#2b1b52;border:.3cqw solid var(--mint);cursor:pointer;touch-action:manipulation}
+#grid button:hover,#grid button:focus-visible{background:var(--mint);color:var(--ink);outline:none}
+#grid b{color:var(--gold);margin-right:.8cqw}#grid button:hover b{color:#b00040}
+@media (orientation:portrait){
+  #stage{width:100vw;height:100vh;height:100dvh;max-height:none;aspect-ratio:auto}
+  #cv{position:absolute;top:50%;left:0;width:100%;height:auto;aspect-ratio:16/9;transform:translateY(-50%)}
+  #tag{left:max(12px,env(safe-area-inset-left,0px));top:max(12px,env(safe-area-inset-top,0px));max-width:calc(100% - 112px);font-size:clamp(12px,3.8vw,18px);padding:4px 8px}
+  #cap{left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));max-height:28dvh;padding:10px 12px;border-width:2px;box-shadow:0 0 0 2px var(--ink);font-size:clamp(15px,4.2vw,21px);line-height:1.4}
+  #bar{height:4px}
+  #skip{right:max(12px,env(safe-area-inset-right,0px));top:max(12px,env(safe-area-inset-top,0px));font-size:clamp(12px,3.4vw,16px)}
+  #menu{justify-content:flex-start;gap:12px;padding:max(60px,10dvh) max(16px,env(safe-area-inset-left,0px)) 24px}
+  #menu h1{font-size:clamp(20px,6vw,32px)}
+  #menu p{font-size:clamp(14px,3.8vw,18px);text-align:center}
+  #grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:min(100%,520px)}
+  #grid button{width:100%;min-width:0;min-height:48px;padding:8px;font-size:clamp(12px,3.5vw,16px)}
+}
+@media (hover:none) and (orientation:landscape) and (max-height:520px){#menu{justify-content:flex-start;padding:12px}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv" width="320" height="180"></canvas>
+  <div id="tag"></div><div id="cap"></div><div id="bar"></div>
+  <button id="skip">ข้าม (Esc) ▸▸</button>
+  <div id="menu"><h1>🧫 คัทซีนอีเวนต์ของเชื้อ</h1><p>คลิกเพื่อดูตัวอย่าง (หรือกดเลข 1–9, 0)</p><div id="grid"></div></div>
+</div>
+<script>
+/* ============ CONFIG ============ */
+const EMBEDDED=new URLSearchParams(location.search).get('embed')==='1';
+const CFG={dur:3,cps:30,sound:true,demoMenu:!EMBEDDED};
+function onCutsceneEnd(id){if(EMBEDDED&&window.parent!==window)window.parent.postMessage({type:'among-the-microbes-event-cutscene:end',id},'*')}
+
+/* ============ ตัวช่วยวาด ============ */
+const cv=document.getElementById('cv'),x=cv.getContext('2d'),$=id=>document.getElementById(id);
+const R=(c,a,b,w,h)=>{x.fillStyle=c;x.fillRect(Math.round(a),Math.round(b),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))};
+const hx2=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
+const hm=(a,b,f)=>{const p=hx2(a),q=hx2(b);return'#'+p.map((v,i)=>(v+(q[i]-v)*f|0).toString(16).padStart(2,'0')).join('')};
+const C=(c,cx,cy,r)=>{for(let d=-r;d<=r;d++){const w=Math.sqrt(r*r-d*d);R(c,cx-w,cy+d,w*2,1)}};
+const L=(c,a,b,e,f)=>{const n=Math.max(Math.abs(e-a),Math.abs(f-b))|0||1;for(let i=0;i<=n;i++)R(c,a+(e-a)*i/n,b+(f-b)*i/n,1,1)};
+const cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),ez=t=>{t=cl(t);return t*t*(3-2*t)},lp=(a,b,f)=>a+(b-a)*f;
+const sh=a=>(Math.random()-.5)*a;
+function txt(s,a,b,z,c){x.font=`${z}px 'Press Start 2P',monospace`;x.fillStyle='#000';x.fillText(s,a+1,b+1);x.fillStyle=c;x.fillText(s,a,b)}
+function fade(a){if(a>0){x.fillStyle=`rgba(5,3,16,${cl(a)})`;x.fillRect(0,0,320,180)}}
+function tint(c){x.fillStyle=c;x.fillRect(0,0,320,180)}
+function speed(cx,cy,t,c='#fff'){for(let i=0;i<40;i++){const a=i/40*6.2832+Math.sin(t*40+i)*.02,r0=55+(i*13%30),r1=r0+60+(i*7%50);L(c,cx+Math.cos(a)*r0,cy+Math.sin(a)*r0*.7,cx+Math.cos(a)*r1,cy+Math.sin(a)*r1*.7)}}
+function heart(a,b,c){R(c,a,b,2,2);R(c,a+3,b,2,2);R(c,a,b+1,5,2);R(c,a+1,b+3,3,1);R(c,a+2,b+4,1,1)}
+function sweat(a,b){R('#6fd0ff',a,b,2,3);R('#bfeaff',a,b+3,3,2)}
+
+/* ============ แบคทีเรียตัวเอก ============ */
+const HERO={b:'#7dffc4',d:'#2fbf8f',l:'#d8fff0',o:'#0f5a57'};
+const PALE={b:'#cfe0da',d:'#8aa59c',l:'#fff',o:'#4a5a66'};
+const HOT={b:'#ff9a8a',d:'#d9503f',l:'#ffd9d0',o:'#7a1f1f'};
+const ACID={b:'#d6e86a',d:'#9aa82a',l:'#f6ffb0',o:'#5a5a10'};
+const PURP={b:'#c4a0ff',d:'#7a4fd0',l:'#f0e4ff',o:'#3a1f7a'};
+const pal=(b,d)=>({b,d,l:'#ffffffa0',o:'#1b2a4a'});
+function bact(cx,cy,u,t,p,o={}){
+  for(let i=0;i<10;i++)R(p.d,cx-12*u-i*u*.8,cy+Math.sin(t*7+i*.8)*u*1.7,u,u);
+  R(p.o,cx-13*u,cy-5*u,26*u,10*u);R(p.o,cx-11*u,cy-7*u,22*u,14*u);
+  R(p.b,cx-12*u,cy-5*u,24*u,10*u);R(p.b,cx-10*u,cy-6*u,20*u,12*u);
+  R(p.l,cx-9*u,cy-5*u,10*u,u);R(p.d,cx+5*u,cy+2*u,3*u,2*u);R(p.d,cx-11*u,cy+3*u,2*u,u);
+  const e=o.shock?1.25:1,ew=5*u*e,eh=6*u*e;
+  for(const ex of[-8,0]){
+    R('#fff',cx+ex*u,cy-5*u,ew,eh);
+    const bl=o.blink&&Math.sin(t*3)>.96;
+    R('#1b1030',cx+(ex+1)*u+(o.look||0)*u,cy-4*u,(o.shock?2:3)*u,bl?u:(o.shock?3:4)*u);
+    R('#fff',cx+(ex+1)*u,cy-4*u,u,u);
+    if(o.glass){const g='#bfe9ff';R(g,cx+ex*u-u,cy-6*u,ew+2*u,u);R(g,cx+ex*u-u,cy-5*u+eh,ew+2*u,u);R(g,cx+ex*u-u,cy-6*u,u,eh+2*u);R(g,cx+ex*u+ew,cy-6*u,u,eh+2*u)}
+  }
+  if(o.glass)R('#bfe9ff',cx-3*u,cy-3*u,3*u,u);
+  R('#ff8fb8',cx-10*u,cy+u,3*u,u*1.5);R('#ff8fb8',cx+6*u,cy+u,3*u,u*1.5);
+  const m='#3a1030';
+  if(o.shock)R(m,cx-3*u,cy+2*u,5*u,3*u);
+  else if(o.mood==='sad'){R(m,cx-2*u,cy+3*u,4*u,u);R(m,cx-3*u,cy+4*u,u,u);R(m,cx+2*u,cy+4*u,u,u)}
+  else if(o.mood==='smile'){R(m,cx-3*u,cy+2*u,u,u);R(m,cx+2*u,cy+2*u,u,u);R(m,cx-2*u,cy+3*u,4*u,u)}
+  else R(m,cx-2*u,cy+3*u,4*u,u);
+}
+const hero=(t,cx,cy,u,o={})=>bact(cx,cy+Math.sin(t*2)*2,u,t,o.pal||HERO,Object.assign({glass:1,blink:1},o));
+
+/* ============ พื้นหลังน้ำเลี้ยงเชื้อ ============ */
+const BUB=Array.from({length:18},(_,i)=>({x:(i*53)%320,sp:10+(i*7)%18,r:1+(i%3),o:(i*41)%200}));
+function bg(t,a='#c9fff0',b='#14607f',bub=1){
+  for(let y=0;y<180;y+=6)R(hm(a,b,y/180),0,y,320,6);
+  for(let i=0;i<30;i++)R('#e8fff8',((i*97+t*(3+i%4))%320),(i*61+Math.sin(t+i)*6)%180,1,1);
+  if(bub)BUB.forEach(q=>{const y=190-((t*q.sp+q.o)%200),bx=q.x+Math.sin(t+q.o)*3;R('rgba(255,255,255,.7)',bx,y,q.r*2,q.r*2)});
+  R(hm(a,b,.9),0,168,320,12);for(let i=0;i<32;i++)R(hm(a,b,.9),i*10,164+(i*7)%5,10,5);
+}
+function phage(cx,cy,u){const c='#c07aff',d='#7a3fd0';
+  R(c,cx-3*u,cy-10*u,6*u,2*u);R(c,cx-5*u,cy-8*u,10*u,6*u);R(c,cx-3*u,cy-2*u,6*u,2*u);R(d,cx-4*u,cy-7*u,u,4*u);
+  R('#ff3b5c',cx-3*u,cy-6*u,u,u);R('#ff3b5c',cx+u,cy-6*u,u,u);
+  R('#8a8aff',cx-u*.5,cy,u,6*u);R('#b0b0ff',cx-3*u,cy+u,6*u,u);R('#b0b0ff',cx-3*u,cy+3*u,6*u,u);
+  L('#8a8aff',cx,cy+5*u,cx-6*u,cy+10*u);L('#8a8aff',cx,cy+5*u,cx+6*u,cy+10*u);L('#8a8aff',cx,cy+5*u,cx-3*u,cy+11*u);L('#8a8aff',cx,cy+5*u,cx+3*u,cy+11*u)}
+function helix(x0,x1,y,t,amp=8){for(let px=x0;px<=x1;px+=2){const k=px*.22+t*4,a=Math.sin(k)*amp,b=-a;R('#ff6ad5',px,y+a,2,2);R('#6ad5ff',px,y+b,2,2);if(((px-x0)/2|0)%3==0)L('rgba(255,255,255,.55)',px,y+a,px,y+b)}}
+
+/* ============ อีเวนต์ทั้ง 10 ============ */
+const EV={
+EV01:{n:'ได้กลิ่นอาหาร',c:'หอมจัง... มีอาหารอยู่ทางนั้น!',s:'up',f(t){
+  bg(t);C('#e0883a',270,92,8);C('#ffb347',270,91,7);C('#ffd88a',268,89,3);
+  for(let i=0;i<9;i++)R('#ffb347',255+(i*13)%30,76+(i*9)%32+Math.sin(t*3+i)*2,2,2);
+  for(let i=0;i<5;i++)for(let px=170;px<262;px+=2){const ph=((t*50-(px-170))%92+92)%92;if(ph<30)R(`rgba(255,235,150,${.6-ph/60})`,px,92+Math.sin(px*.16-t*8+i)*4+(i-2)*8,2,2)}
+  const hx=95+ez(t/2.5)*35,sn=t<1.6?Math.sin(t*16)*1.5:0;hero(t,hx,92+sn,3,{look:1,mood:'smile'});
+  if(t>1.2){heart(hx+14,52-(t-1.2)*8,'#ff5f8f');heart(hx-8,60-(t-1.4)*6,'#ff9ab8')}}},
+EV02:{n:'อาหารเริ่มขาด',c:'อาหารหมดแล้ว... หิวจัง...',s:'down',f(t){
+  bg(t,'#9db8b0','#2c4650');const n=Math.max(0,6-Math.floor(t*2.2));
+  for(let i=0;i<n;i++)if(t%.4<.3||i<n-1)R('#ffb347',215+i*12,100+(i%2)*6,3,3);
+  const u=3-.35*ez(t/3);hero(t,150,98+t*3,u,{mood:'sad',look:-1});
+  for(let k=0;k<3;k++){const a=(t*3+k)%3/3;R(`rgba(255,255,255,${1-a})`,100-a*20,100+k*3,4,1);R(`rgba(255,255,255,${1-a})`,204+a*20,100+k*3,4,1)}
+  if(t>.6)txt('GRRR..',120,60,8,'#ffe27a');if(t>1.2)sweat(190,70+(t*20)%8);
+  const g=x.createRadialGradient(160,90,40,160,90,190);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,`rgba(0,0,0,${.2+t*.15})`);x.fillStyle=g;x.fillRect(0,0,320,180)}},
+EV03:{n:'รอบตัวเป็นกรดมากขึ้น',c:'แสบๆ... น้ำรอบตัวเป็นกรดแล้ว!',s:'fizz',f(t){
+  const f=ez(t/2.4);bg(t,hm('#c9fff0','#f2ff7a',f),hm('#14607f','#7a6a10',f));
+  for(let i=0;i<20;i++)txt('H+',(i*47)%320,((t*45+i*31)%200)-10,6,i%2?'#fff27a':'#ffb347');
+  for(let i=0;i<10;i++)R('rgba(255,255,255,.8)',130+(i*11)%60,100-((t*40+i*13)%60),2,2);
+  const a=f*3;hero(t,160+sh(a),95+sh(a),3,{pal:{b:hm(HERO.b,ACID.b,f),d:hm(HERO.d,ACID.d,f),l:HERO.l,o:hm(HERO.o,ACID.o,f)},mood:'sad',shock:t>1.6});
+  R('#222',240,10,72,10);R(hm('#4cff9a','#ff3b3b',f),242,12,68*(1-f*.55),6);txt('pH',214,19,7,'#fff');txt((7-3*f).toFixed(1),262,34,7,'#fff')}},
+EV04:{n:'ไวรัสฟาจเข้าจู่โจม',c:'ไวรัสฟาจ! มันกำลังฉีดสารพันธุกรรมใส่ฉัน!',s:'alarm',f(t){
+  bg(t,'#6b4a9a','#1a0f36');const inf=t>2.2,a=t>1.2?sh(3):0;
+  hero(t,160+a,95,3,{shock:t>.8,pal:inf?PURP:HERO});
+  [-16,0,16].forEach((o,i)=>{const p=ez((t-.1-i*.2)/.8),ty=70+(i==1?-2:0),y=lp(-40,ty-8*2.2,p);phage(160+o+a,y,2.2);
+    if(p>=1&&t<2.4)for(let k=0;k<4;k++)R('#ff6ad5',160+o+a,ty+((t*30+k*5)%16),1,2)});
+  if(t<.5)tint(`rgba(255,0,60,${.25*Math.abs(Math.sin(t*14))})`);if(t>1)txt('!!',150,48,16,'#ff4f6b');if(t>1.2&&t<1.6)speed(160,92,t,'rgba(255,255,255,.7)')}},
+EV05:{n:'เซลล์ภูมิคุ้มกันเข้ามาใกล้',c:'เซลล์ภูมิคุ้มกัน! หนีเร็ว!',s:'beat',f(t){
+  bg(t,'#e8c9d0','#5a2a40');const wx=lerp3(t),wy=92+Math.sin(t*2)*4;
+  C('#7a5a9a',wx,wy,40);C('#f4f0ff',wx,wy,38);C('#e0d6f5',wx+6,wy+8,30);
+  C('#b9a0ff',wx-8,wy-6,10);C('#b9a0ff',wx+4,wy-12,9);C('#b9a0ff',wx-4,wy+6,9);
+  for(let k=0;k<3;k++)C('#f4f0ff',wx-42-Math.sin(t*4+k)*5,wy-14+k*14,7);
+  R('#222',wx-24,wy-2,5,6);R('#222',wx-12,wy-2,5,6);L('#222',wx-28,wy-8,wx-19,wy-4);L('#222',wx-8,wy-8,wx-14,wy-4);
+  hero(t,175-t*22+sh(2),98,3,{shock:1,look:1});if(t>.5){txt('!!',140-t*22,54,14,'#ff4f6b');sweat(196-t*22,70+(t*25)%8)}
+  tint(`rgba(255,40,80,${.08+.07*Math.sin(t*10)})`)}},
+EV06:{n:'เจอน้ำยาฆ่าเชื้อ',c:'น้ำยาฆ่าเชื้อ!! ไม่ไหวแล้ว...',s:'whoosh',f(t){
+  bg(t);hero(t,160+sh(t>1?3:0),95,3,{pal:t>1.2?PALE:HERO,shock:t>.8,mood:'sad'});
+  const fr=lp(-10,190,ez(t/2.6));for(let px=0;px<320;px+=4){const e=fr+Math.sin(px*.07+t*5)*6;R('rgba(110,100,255,.55)',px,0,4,e);R('rgba(200,230,255,.8)',px,e,4,2)}
+  for(let i=0;i<14;i++)R('rgba(170,160,255,.8)',(i*29)%320,fr+((t*60+i*17)%30),2,3);
+  R('#e8f0ff',262,0,26,24);R('#ff4f6b',266,8,18,10);R('#fff',274,9,2,8);R('#fff',270,12,10,2);
+  if(t>1.2)txt('X_X',142,60,10,'#fff')}},
+EV07:{n:'สร้างชุมชนเมือก',c:'รวมตัวกัน สร้างชุมชนเมือก — ปลอดภัยแล้ว!',s:'squish',f(t){
+  bg(t,'#c9fff0','#14607f',0);const g=ez((t-.3)/1.8),cols=[['#ff9ecb','#c2527f'],['#ffe27a','#c28a2a'],['#a98bff','#5c3fb5'],['#ff9a7a','#b0502e']];
+  [[0,0,80],[1,70,40],[2,-70,30],[3,50,-60],[4,-60,-50]].forEach(([i,dx,dy])=>{});
+  const pos=[[110,50],[240,60],[90,140],[250,140]];
+  for(let k=0;k<5;k++)C(`rgba(255,226,140,${.28})`,160+Math.cos(k*1.26)*22,95+Math.sin(k*1.26)*16,72*g);
+  C('rgba(255,240,180,.35)',160,95,75*g);
+  pos.forEach(([px,py],i)=>bact(lp(px,160+(i%2?30:-30),g)+0,lp(py,95+(i<2?-20:22),g),1.6,t+i,pal(...cols[i]),{mood:'smile'}));
+  hero(t,160,95,2.2,{mood:'smile'});
+  for(let i=0;i<6;i++){const s=(t*3+i)%2;if(s<1)R('#fff',160+Math.cos(i*1.05)*70*g,95+Math.sin(i*1.05)*50*g,2,2)}}},
+EV08:{n:'พบชิ้นส่วน DNA จากเชื้ออื่น',c:'DNA ของเชื้ออื่น... เก็บไปใช้ดีไหมนะ?',s:'sparkle',f(t){
+  bg(t,'#c9fff0','#14607f');const ab=t>1.8,k=ez((t-1.8)/.8),hx=95,fx=lp(330,hx+30,ez(t/1.8));
+  hero(t,hx,95,3,{look:1,shock:t>.8&&t<1.8,mood:ab?'smile':null,pal:ab?{b:hm(HERO.b,PURP.b,k*.5),d:hm(HERO.d,PURP.d,k*.5),l:HERO.l,o:HERO.o}:HERO});
+  if(!ab)helix(fx-40,fx+40,95,t);else if(k<1)helix(lp(fx-40,hx-4,k),lp(fx+40,hx+4,k),95,t,8*(1-k));
+  if(t>.8&&t<1.8)txt('?',hx+10,52,14,'#fff27a');
+  if(ab){C(`rgba(255,226,122,${.5*(1-k)})`,hx,95,20+k*40);for(let i=0;i<8;i++)txt('+',hx+Math.cos(i)*(20+k*30),95+Math.sin(i)*(14+k*20),8,'#fff')}}},
+EV09:{n:'โดนรังสียูวีหรือความร้อน',c:'ยูวีกับความร้อน! ร้อนจัง...',s:'zap',f(t){
+  bg(t,'#ffb36a','#7a2a2a');for(let k=0;k<7;k++)for(let y=0;y<180;y+=2)R(`rgba(230,160,255,${.2+.1*Math.sin(t*9+k)})`,k*55-20+y*.5+Math.sin(t*3+k)*5,y,14,2);
+  for(let y=0;y<180;y+=12)R('rgba(255,230,120,.25)',0,y+Math.sin(t*6+y)*3,320,2);
+  const hot=ez(t/2);hero(t,165+sh(3),95,3,{pal:{b:hm(HERO.b,HOT.b,hot),d:hm(HERO.d,HOT.d,hot),l:HERO.l,o:hm(HERO.o,HOT.o,hot)},shock:t>.4,mood:'sad'});
+  sweat(190,66+(t*30)%12);sweat(135,70+(t*24)%12);
+  R('#222',24,40,10,100);R('#ff3b3b',26,138-96*hot,6,96*hot);C('#ff3b3b',29,142,8);
+  if(t<.35)tint(`rgba(255,255,255,${.7-t*2})`);if(t>.3&&t<.7)speed(160,92,t,'rgba(255,255,160,.8)')}},
+EV10:{n:'พบความเสียหายใน DNA',c:'DNA เสียหาย! ต้องรีบซ่อมแซม!',s:'beep',f(t){
+  R('#150a2a',0,0,320,180);C('#1f1240',160,92,84);C('#2a1a5a',160,92,80);
+  const fix=ez((t-1.2)/1.4),N=44;
+  for(let i=0;i<N;i++){const a=i/N*6.2832,bad=a>.4&&a<1.3&&fix<1;let r=52+(bad?10*Math.sin(t*20+i)*(1-fix):0);
+    R(bad?(t*12%2<1?'#ff3b3b':'#ffb347'):(i%2?'#ff6ad5':'#6ad5ff'),160+Math.cos(a)*r,92+Math.sin(a)*r,3,3);
+    if(bad&&i%3==0)R('#fff27a',160+Math.cos(a)*(r+8)+sh(6),92+Math.sin(a)*(r+8)+sh(6),1,1)}
+  const ea=lp(3.6,.85,ez((t-.4)/1.2)),ex=160+Math.cos(ea)*(62-(fix>0?0:0)),ey=92+Math.sin(ea)*62;
+  C('#2e9a62',ex,ey,7);C('#7dffb0',ex,ey-1,6);R('#fff',ex-3,ey-3,2,2);R('#fff',ex+1,ey-3,2,2);R('#1b1030',ex-2,ey-3,1,2);R('#1b1030',ex+2,ey-3,1,2);
+  if(t<1.4)txt('!',152,98,24,'#ff3b3b');else if(fix>=1)txt('OK',142,98,16,'#7dffb0')}}
+};
+function lerp3(t){return lp(360,235,ez(t/2.8))}
+
+/* ============ เสียง ============ */
+let AC=null;
+function tone(f0,f1,d,ty='square',v=.05,dl=0){if(!AC||!CFG.sound)return;const o=AC.createOscillator(),g=AC.createGain(),t0=AC.currentTime+dl;o.type=ty;o.frequency.setValueAtTime(f0,t0);o.frequency.exponentialRampToValueAtTime(f1,t0+d);g.gain.setValueAtTime(v,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.connect(g).connect(AC.destination);o.start(t0);o.stop(t0+d+.02)}
+const SND={up:()=>[523,659,784,1047].forEach((f,i)=>tone(f,f,.25,'triangle',.07,i*.1)),down:()=>{tone(300,90,.9,'sawtooth',.05);tone(120,50,1,'sine',.15,.6)},fizz:()=>{for(let i=0;i<14;i++)tone(900+Math.random()*1500,400,.06,'square',.02,i*.12)},alarm:()=>{for(let i=0;i<4;i++)tone(i%2?600:900,i%2?600:900,.18,'square',.05,i*.2)},beat:()=>{for(let i=0;i<4;i++){tone(90,40,.15,'sine',.35,i*.6);tone(80,40,.15,'sine',.3,i*.6+.2)}},whoosh:()=>tone(1400,120,1.4,'sawtooth',.04),squish:()=>{tone(200,500,.2,'sine',.15);tone(300,150,.3,'sine',.12,.3)},sparkle:()=>[1047,1319,1568,2093,1568,2637].forEach((f,i)=>tone(f,f,.15,'triangle',.05,.9+i*.08)),zap:()=>{tone(2000,80,.35,'sawtooth',.08);tone(1200,60,.4,'square',.05,.3)},beep:()=>{for(let i=0;i<5;i++)tone(880,880,.1,'square',.04,i*.3)}};
+
+/* ============ ตัวเล่น ============ */
+let cur=null,t0=0,cb=null,idleT=0,lastNow=0,shown=-1;
+function playCutscene(id,done){
+  if(!EV[id]||cur)return;if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+  cur=id;cb=done;t0=performance.now();shown=-1;
+  $('menu').style.display='none';['tag','cap','bar','skip'].forEach(k=>$(k).style.display='block');
+  $('tag').textContent=id+' · '+EV[id].n;$('cap').textContent='';$('bar').style.width='0';
+  const sn=SND[EV[id].s];if(sn)sn();
+}
+function stop(){if(!cur)return;const id=cur;cur=null;['tag','cap','bar','skip'].forEach(k=>$(k).style.display='none');
+  if(CFG.demoMenu)$('menu').style.display='flex';
+  document.dispatchEvent(new CustomEvent('cutscene:end',{detail:{id}}));onCutsceneEnd(id);if(cb)cb(id)}
+function frame(now){
+  x.globalAlpha=1;
+  if(cur){const t=(now-t0)/1000,e=EV[cur];if(t>=CFG.dur){stop()}else{
+    e.f(t);fade(1-t/.25);fade((t-(CFG.dur-.25))/.25);$('bar').style.width=(t/CFG.dur*100)+'%';
+    const n=Math.min(e.c.length,Math.floor(Math.max(0,t-.3)*CFG.cps));if(n!==shown){shown=n;$('cap').textContent=e.c.slice(0,n)}}}
+  else{idleT+=Math.min(.05,(now-lastNow)/1000);bg(idleT);hero(idleT,160,95,3,{look:Math.sin(idleT)>0?1:-1})}
+  lastNow=now;requestAnimationFrame(frame)
+}
+/* ============ UI ============ */
+const ids=Object.keys(EV);
+ids.forEach(id=>{const b=document.createElement('button');b.innerHTML=`<b>${id}</b>${EV[id].n}`;b.onclick=e=>{e.stopPropagation();playCutscene(id)};$('grid').appendChild(b)});
+$('stage').addEventListener('click',e=>{if(cur&&!e.target.closest('#menu'))stop()});
+$('skip').onclick=e=>{e.stopPropagation();stop()};
+addEventListener('keydown',e=>{if(cur&&['Escape',' ','Enter'].includes(e.key)){e.preventDefault();stop()}else if(!cur&&/^[0-9]$/.test(e.key)&&CFG.demoMenu){playCutscene(ids[(+e.key+9)%10])}});
+if(EMBEDDED){const eventId=new URLSearchParams(location.search).get('event');if(EV[eventId])playCutscene(eventId);else{console.error('Unknown event cutscene:',eventId);if(window.parent!==window)window.parent.postMessage({type:'among-the-microbes-event-cutscene:error',id:eventId},'*')}}
+requestAnimationFrame(t=>{lastNow=t;frame(t)});
+</script>
+</body>
+</html>

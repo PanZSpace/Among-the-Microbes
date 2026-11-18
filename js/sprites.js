@@ -8,7 +8,7 @@ disc(c,cx,cy,28,23,col);disc(c,cx,cy,19,15,"#263854");for(let i=0;i<7;i++){const
 const happy=mood=="happy"||mood=="excited",sad=mood=="sad"||mood=="worried"||mood=="dying",worried=mood=="worried",angry=mood=="angry",shy=mood=="shy",sly=mood=="sly",surprised=mood=="surprised"||mood=="excited";c.fillStyle="#fff";c.fillRect(cx-10,cy-7,5,6);c.fillRect(cx+5,cy-7,5,6);c.fillStyle="#111";if(mood=="dying"){c.fillRect(cx-10,cy-5,5,2);c.fillRect(cx+5,cy-5,5,2)}else if(sad){c.fillRect(cx-9,cy-5,3,3);c.fillRect(cx+6,cy-5,3,3)}else{c.fillRect(cx-9,cy-5,3,4);c.fillRect(cx+6,cy-5,3,4)}
 c.fillStyle="#201e3c";if(mood=="dying"){c.fillRect(cx-4,cy+4,8,2)}else if(angry){c.fillRect(cx-6,cy+4,12,2);c.fillRect(cx-11,cy-10,7,2);c.fillRect(cx+4,cy-10,7,2)}else if(happy){c.fillRect(cx-5,cy+3,2,2);c.fillRect(cx-3,cy+5,6,2);c.fillRect(cx+3,cy+3,2,2)}else if(sad||worried){c.fillRect(cx-4,cy+5,8,2)}else if(shy){c.fillStyle="#ff8fa3";c.fillRect(cx-17,cy+2,5,2);c.fillRect(cx+12,cy+2,5,2);c.fillStyle="#201e3c";c.fillRect(cx-3,cy+5,6,2)}else if(sly){c.fillRect(cx-4,cy+5,8,2);c.fillRect(cx+2,cy+3,5,2)}else if(surprised){c.fillRect(cx-2,cy+3,5,5)}else c.fillRect(cx-5,cy+4,10,2)}
 function cell(cv,sk,tier,t,mood="neutral"){if(typeof PATHOGENS!="undefined"&&PATHOGENS.some(p=>p.id==sk&&p.kind=="Virus"))return virusCell(cv,sk,t,mood);const c=cv.getContext("2d");c.clearRect(0,0,128,96);const s=sk=="Om"?{g:"x"}:SP[sk],col=sk=="Om"?"#ffd27f":gramColor(s.g),dk="#00000033";
-const cy=50+(RM?0:Math.round(Math.sin(t/400)*2)),cx=64+(RM?0:Math.round(Math.sin(t/700)*3));
+const phase=Math.max(0,SK.indexOf(sk))*.58,cy=50+(RM?0:Math.round(Math.sin(t/400+phase)*2)),cx=64+(RM?0:Math.round(Math.sin(t/700+phase)*3));
 if(tier>=3&&!RM)for(let i=0;i<14;i++){const a=i/14*6.28+t/900;c.fillStyle=TC[Math.min(tier,6)];c.fillRect(Math.round(cx+Math.cos(a)*(42+tier)),Math.round(cy+Math.sin(a)*(30+tier)),2,2)}
 let fx=cx,fy=cy;
 if(sk=="Sa"){[[52,44],[72,44],[62,57],[62,34],[80,56],[46,58]].forEach(p=>disc(c,p[0],p[1]+cy-50,10,10,col));fx=62;fy=cy-6}
@@ -20,6 +20,18 @@ if(sk=="Kp")disc(c,cx,cy,d[0]+5,d[1]+5,"#b99df555");if(sk=="Ec"){c.fillStyle="#8
 if(sk=="Pa"){c.fillStyle=col;for(let i=0;i<14;i++)c.fillRect(cx-d[0]-3-i*2,cy+Math.round(Math.sin(i+(RM?0:t/200))*3),2,2)}
 if(sk=="Vc"){for(let i=0;i<8;i++){const x=cx-10+i*3,y=cy-Math.round(Math.sin(i/7*Math.PI)*6);disc(c,x,y,5,5,col)}}else disc(c,cx,cy,d[0],d[1],col)}
 if(sk=="Bs"){disc(c,cx+10,cy,5,4,"#ffe9a8")}
+if(sk=="Ec"){c.fillStyle="#23645e";for(let i=-2;i<=2;i++)c.fillRect(cx+i*7,cy-3+(i%2),3,5)}
+else if(sk=="Kp"){c.fillStyle="#f1d5ff";c.fillRect(cx-14,cy-8,3,2);c.fillRect(cx+11,cy+6,3,2);c.fillStyle="#ffffff55";c.fillRect(cx-16,cy-12,7,2)}
+else if(sk=="Sa"){c.fillStyle="#ffffff88";[[52,44],[72,44],[62,57],[62,34],[80,56],[46,58]].forEach(([x,y])=>c.fillRect(x-2,y-2,3,2))}
+else if(sk=="Sp"){c.fillStyle="#743e88";c.fillRect(cx,cy-8,2,16);c.fillStyle="#ffffff66";c.fillRect(cx-9,cy-7,4,2);c.fillRect(cx+8,cy-7,4,2)}
+else if(sk=="Hi"){c.fillStyle="#507b89";c.fillRect(cx-12,cy-3,3,6);c.fillRect(cx+9,cy-3,3,6)}
+else if(sk=="En"){for(let i=-1;i<=1;i++){c.fillStyle=i%2?"#ffe09a":"#ffffff66";c.fillRect(cx+i*11-1,cy-5,3,2)}}
+else if(sk=="Ab"){c.fillStyle="#dceeff88";c.fillRect(cx-2,cy-6,3,12);c.fillRect(cx-14,cy-3,2,3);c.fillRect(cx+12,cy+1,2,3)}
+else if(sk=="Lb"){c.fillStyle="#5c4d83";c.fillRect(cx-12,cy-5,2,10);c.fillRect(cx+1,cy-7,2,14);c.fillRect(cx+13,cy-4,2,8)}
+else if(sk=="Gv"){c.fillStyle="#fff0d488";c.fillRect(cx-8,cy-3,3,2);c.fillRect(cx+3,cy+4,3,2);c.fillRect(cx+8,cy-5,2,2)}
+else if(sk=="Mp"){c.fillStyle="#ffffff88";c.fillRect(cx-13,cy-1,2,2);c.fillRect(cx+10,cy-7,2,2);c.fillRect(cx+2,cy+8,2,2);if(!RM){c.fillStyle="#8be3e2";c.fillRect(cx+15,cy+Math.round(Math.sin(t/180+phase)*3),5,1)}}
+else if(sk=="Yp"){c.fillStyle="#493759";c.fillRect(cx-13,cy-4,3,8);c.fillRect(cx+10,cy-4,3,8);c.fillStyle="#ffffff66";c.fillRect(cx-5,cy-5,4,2)}
+else if(sk=="Vc"){c.fillStyle="#fff4c2";c.fillRect(cx+2,cy-6,2,3);c.fillStyle="#508d8d";c.fillRect(cx-9,cy+3,2,3)}
 const worn=Array.isArray(S.eq)?S.eq:S.eq?[S.eq]:[],q=worn[0]||"";
 if(q=="angelWings"){
   const rows=[[-19,8],[-15,12],[-11,15],[-7,14],[-3,11],[1,6]],wing=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(x,y,w,h)};
