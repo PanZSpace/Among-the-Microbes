@@ -469,7 +469,7 @@ body::after{
 .hero-copy,.hero-creature{position:relative;z-index:1}
 .hero-copy h1{text-align:left;font-size:clamp(18px,3vw,27px)}
 .hero-copy .sub{text-align:left;margin:6px 0 12px;color:var(--cy);font-family:inherit;font-size:16px;font-weight:700}
-.hero-kicker{display:inline-block;padding:4px 8px;border:1px solid #5b6688;background:#10182b;color:var(--am);font:8px "Press Start 2P",monospace;letter-spacing:.04em}
+.hero-kicker{display:inline-block;padding:4px 8px;border:1px solid #5b6688;background:#10182b;color:var(--am);font:700 clamp(14px,1.5vw,16px)/1.5 "Noto Sans Thai",Sarabun,system-ui,sans-serif}
 .hero-description{max-width:500px;margin:12px 0;color:#d4dcef}
 .hero-creature{padding:10px;border:1px solid #566487;background:#10182b99;box-shadow:5px 5px 0 #0b1020}
 .hero-creature canvas{width:min(100%,360px);margin:2px auto}
@@ -646,4 +646,89 @@ body::after{
 @media(hover:none),(max-width:700px){
   .nav button,.life-toolbar button,.event-grid button,.gene-tag,.emote-picker button,.word-slot,.direction-pad button,summary{min-height:44px}
   .event-grid button,.emote-picker button{min-width:44px}
+}
+
+/* Cute palette and softer surfaces; layout and control sizing stay unchanged. */
+:root{
+  --bg:#1d1b4d;--bg2:#262a63;--pn:#2d2f6e;--pn2:#3b3f8a;--tx:#fffaff;--mu:#cdd3f5;
+  --pk:#ffb3e6;--cy:#7ff0ee;--am:#ffe66d;--rd:#ff8fa8;--gr:#8bf2b5;--lav:#d4b9ff;
+  --ice:#c4f1ff;--peach:#ffc9a8
+}
+body{
+  background:
+    radial-gradient(ellipse at 10% 6%,#ff8fd366,transparent 34rem),
+    radial-gradient(ellipse at 92% 34%,#4ef0e84d,transparent 32rem),
+    radial-gradient(ellipse at 50% 104%,#a98bff55,transparent 40rem),
+    linear-gradient(180deg,#1d1b4d,#27236b 55%,#1b2559)
+}
+body::before{
+  opacity:.3;
+  background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#ffd9f3 1px,transparent 1.5px);
+  background-size:41px 41px,67px 67px;background-position:0 0,20px 31px;
+  animation:cute-theme-dots 40s linear infinite,star-pulse 4.5s ease-in-out infinite alternate
+}
+body::after{
+  background:
+    radial-gradient(ellipse at 18% 28%,#d4b9ff33,transparent 30%),
+    radial-gradient(ellipse at 78% 68%,#7ff0ee33,transparent 32%),
+    radial-gradient(ellipse at 55% 8%,#ffe66d1c,transparent 28%);
+  opacity:.5
+}
+@keyframes cute-theme-dots{to{background-position:0 41px,20px 98px}}
+h1{
+  background:linear-gradient(90deg,#ffb3e6,#ffe66d,#7ff0ee,#d4b9ff,#ffb3e6);
+  background-size:300% 100%;background-clip:text;-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;color:var(--pk);
+  text-shadow:none;filter:drop-shadow(3px 3px 0 #5b4aa8) drop-shadow(0 0 14px #ffb3e68a);
+  animation:cute-theme-rainbow 8s linear infinite,cute-theme-bob 3.4s ease-in-out infinite
+}
+@keyframes cute-theme-rainbow{to{background-position:300% 0}}
+@keyframes cute-theme-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.home-hero{
+  border:3px solid transparent;border-radius:26px;
+  background:linear-gradient(145deg,#312f7a,#232766) padding-box,
+    linear-gradient(120deg,#ffb3e6,#ffe66d,#7ff0ee,#d4b9ff,#ffb3e6) border-box;
+  background-size:auto,300% 100%;animation:cute-theme-rainbow 9s linear infinite;
+  box-shadow:0 6px 0 #14143a,0 18px 40px #ff9fd933
+}
+.home-hero::after{font-size:22px;color:#fff3a0;text-shadow:0 0 14px #ffe66d,0 0 28px #ffb3e6}
+.hero-creature{border-radius:18px;border-color:#8f86e8;background:#25286b99;box-shadow:0 5px 0 #14143a}
+.nav{border-radius:24px;border-color:#8f86e8;background:#25286bf0;box-shadow:0 5px 0 #14143a,0 12px 30px #0a0a2a80}
+.nav button{border-radius:999px;border-color:transparent}
+.nav button:hover{border-color:#b9b1ff;background:#3b3f8a}
+.card{border-radius:20px;border-color:#8f86e8;background:linear-gradient(150deg,#333579ee,#262a63ee);box-shadow:0 6px 0 #14143a,0 18px 34px #0a0a2a66,inset 0 1px 0 #ffffff26}
+.hd{border-bottom-color:#ffffff55;background:linear-gradient(90deg,#ffb3e6,#ffe66d 50%,#7ff0ee);color:#3a2a6b}
+.box{border-radius:14px;border-color:#7b74d0;background:linear-gradient(100deg,#ffe66d1c,#ffb3e60d)}
+.bdg{border-radius:999px;background:#ffffff14}
+.hud,.life-toolbar,.home-save{border-radius:16px;border-color:#6f6bc4;background:#27296acc}
+input,select,textarea{border-radius:12px;border-color:#7b74d0;background:#1a1c55}
+table{border-radius:14px;border-color:#6f6bc4}
+th{background:#3b3f8a}
+button{
+  border-color:#9a90f0;border-radius:14px;
+  background:linear-gradient(180deg,#4d52ad,#383c8a);
+  box-shadow:0 4px 0 #1a1a4a,inset 0 1px 0 #ffffff3a
+}
+button.pk,.home-actions .big.pk{
+  border-color:#fff;border-radius:14px;
+  background:linear-gradient(180deg,#ffd6f3,#ff9fd9);color:#4a1f55;
+  box-shadow:0 5px 0 #c4569a,0 0 20px #ff9fd966,inset 0 1px 0 #fff
+}
+.home-actions .big.pk small{color:#694267}
+.act button{border-radius:14px}
+.codex-item-tile,.codex-species-card,.badge-card,.minigame-card{border-radius:18px}
+.action-icon{border-radius:12px}
+@media(hover:hover){
+  button:hover{border-color:var(--pk);box-shadow:0 7px 0 #1a1a4a,0 0 18px #ffb3e655}
+  button.pk:hover,.home-actions .big.pk:hover{box-shadow:0 8px 0 #c4569a,0 0 28px #ff9fd9aa}
+}
+@media(hover:none),(max-width:700px){
+  button:hover{transform:none;filter:none;box-shadow:0 4px 0 #1a1a4a,inset 0 1px 0 #ffffff3a}
+  button.pk:hover,.home-actions .big.pk:hover{box-shadow:0 5px 0 #c4569a,0 0 20px #ff9fd966,inset 0 1px 0 #fff}
+}
+.button-feedback{animation:button-tap-feedback .42s cubic-bezier(.2,1.4,.4,1)}
+@keyframes button-tap-feedback{
+  0%,100%{transform:scale(1)}
+  28%{transform:scale(.94);filter:brightness(1.12)}
+  64%{transform:translateY(-2px) scale(1.035);filter:brightness(1.16)}
 }

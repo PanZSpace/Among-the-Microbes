@@ -90,4 +90,19 @@ case"sparkle":c.fillStyle=p;c.font="12px monospace";c.fillText("✧",x-27,y-21);
 case"planet":c.strokeStyle=p;c.lineWidth=2;c.beginPath();c.ellipse(cx,cy,34,22,-.3,0,Math.PI*2);c.stroke();pixel("#ff9eaa",[[23,-5,4,4]]);break;
 }
 }
-let raf=0;function anim(cv,sk,tier){cancelAnimationFrame(raf);let mood="neutral",reset=0;cv.setMood=value=>{mood=value;clearTimeout(reset);if(value!="neutral")reset=setTimeout(()=>mood="neutral",2600)};cv.onpointerenter=()=>{mood="surprised";clearTimeout(reset);reset=setTimeout(()=>mood="happy",850)};cv.onpointerleave=()=>{if(mood=="happy")mood="neutral"};cv.onclick=()=>cv.setMood("excited");const f=t=>{if(!cv.isConnected)return;cell(cv,sk,tier,t,mood);raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}
+function microbeSpriteId(gameKey){return typeof MICROBE_DB=="undefined"?null:MICROBE_DB.spriteByGameKey[gameKey]}
+function microbeExpression(mood){return typeof MICROBE_DB=="undefined"?"random":MICROBE_DB.expressionByMood[mood]||"random"}
+function drawMicrobeAccessories(c,tier){const worn=Array.isArray(S.eq)?S.eq:S.eq?[S.eq]:[];worn.slice(0,2).forEach(q=>drawExtraAccessory(c,q,64,43,64,48));if(tier>=4&&!worn.includes("crown"))drawExtraAccessory(c,"crown",64,43,64,48)}
+function drawMicrobeSprite(cv,sk,tier=0,mood="happy"){const spriteId=microbeSpriteId(sk);if(typeof MicrobeSprites=="undefined"||!spriteId)return false;const c=cv.getContext("2d"),bug=MicrobeSprites.make(spriteId,{autoExpression:false});bug.setExpression(microbeExpression(mood));c.clearRect(0,0,cv.width,cv.height);bug.draw(c,16,0,1.5);drawMicrobeAccessories(c,tier);return true}
+const FRAME_INTERVAL=1000/45;
+let raf=0;function anim(cv,sk,tier){cancelAnimationFrame(raf);let mood="neutral",reset=0;
+const spriteId=microbeSpriteId(sk);
+if(typeof MicrobeSprites!="undefined"&&spriteId){
+const bug=MicrobeSprites.make(spriteId),c=cv.getContext("2d");let last=0;
+cv.setMood=value=>{mood=value;clearTimeout(reset);bug.setExpression(microbeExpression(value));if(value!="neutral")reset=setTimeout(()=>{mood="neutral";bug.setExpression("random")},2600)};
+cv.onpointerenter=()=>{cv.setMood("surprised");clearTimeout(reset);reset=setTimeout(()=>cv.setMood("happy"),850)};
+cv.onpointerleave=()=>{if(mood=="happy")cv.setMood("neutral")};
+cv.onclick=()=>cv.setMood("excited");
+const f=t=>{if(!cv.isConnected)return;if(last&&t-last<FRAME_INTERVAL){raf=requestAnimationFrame(f);return}bug.update(last&&!RM?(t-last)/1000:0);last=t;c.clearRect(0,0,cv.width,cv.height);bug.draw(c,16,0,1.5);drawMicrobeAccessories(c,tier);raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f);return}
+cv.setMood=value=>{mood=value;clearTimeout(reset);if(value!="neutral")reset=setTimeout(()=>mood="neutral",2600)};
+cv.onpointerenter=()=>{mood="surprised";clearTimeout(reset);reset=setTimeout(()=>mood="happy",850)};cv.onpointerleave=()=>{if(mood=="happy")mood="neutral"};cv.onclick=()=>cv.setMood("excited");const f=t=>{if(!cv.isConnected)return;cell(cv,sk,tier,t,mood);raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}

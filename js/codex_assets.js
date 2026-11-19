@@ -70,34 +70,77 @@ function codexCollectionCard(ctx){
   codexPixel(ctx,60,17,4,3,white);codexPixel(ctx,62,20,3,3,gray);
   codexPixel(ctx,29,14,31,1,white);codexPixel(ctx,27,17,1,44,light);
 }
+const CUTE_PAL={o:"#3d2c6b",k:"#3d2c6b",w:"#ffffff",r:"#ff8fb0",y:"#ffd84d",c:"#7de8f2",g:"#8ef0b8",v:"#b79bff",P:"#ff7fa8",s:"#fff7b0"};
+const CUTE_ICONS={
+  journey:{bg:"#c9ffe3",map:{p:"#7debb5"},rows:[
+    "........",".....ooo","...ooppp","..oppppp",".oppwwpp",".opwppppp",".opppkpp",".opppkpp",
+    ".oprrppk","..oppppp","...ooppp",".....opp","......op",".......o"],extra:[[21,9,"s"]]},
+  arcade:{bg:"#e6dcff",map:{v:"#b79bff"},rows:[
+    "........","..oooooo",".ovvvvvv","ovwvvvvv","ovvooooo","ovvocccc","ovvockcc","ovvockcc",
+    "ovvocrck","ovvooooo","ovvvvvvv","ovyvvvpv",".ovvvvvv","..oooooo"],extra:[]},
+  friends:{bg:"#ffe0ec",map:{p:"#ff9cc2"},rows:[
+    "........",".oooo...","oppppoo.","opwppppo","opwppppp","opppkppp","opppkppp","oprrpppk",
+    ".opppppp","..oppppp","...opppp","....oppp",".....opp","......op",".......o"],extra:[]},
+  guide:{bg:"#dbeaff",map:{v:"#8fa8ff"},rows:[
+    "........","..oooooo",".owwwwww",".owwwwww",".owwwkww",".owwwkww",".owrrwwk",".owwwwww",
+    ".owwwwww",".ovvvvvy","..oooooy",".......y",".......o"],extra:[]},
+  pathogens:{bg:"#efe3ff",map:{p:"#c3a6ff"},rows:[
+    "........","..y.oooo","..oopppp",".oppwppp","yppwpppp","oppppppp","opppkppp","opppkppp",
+    "oprrpppk","yppppppp",".opppppp","..oopppp","..y.oooo"],extra:[]},
+  chronicles:{bg:"#fff3d1",map:{w:"#fff6dc"},rows:[
+    "........","..oooooo",".owwwwww","owwwwwww","owwwwwww","owwwkwww","owwwkwww","owwrrwwk",
+    "owwwwwww","owcccccc","owwwwwww","owcccccc",".owwwwww","..oooooo"],extra:[]},
+  achievements:{bg:"#fff0b8",map:{y:"#ffd84d"},rows:[
+    "......oo","......oy",".....oyy","oooooyyy","oyyyywyy",".oyyyyyy","..oyykyy","..oyykyy",
+    "...orryk","...oyyyy","..oyyyoo","..oyyoo.",".oyyo...",".oooo..."]},
+  _:{bg:"#ffe8d9",map:{p:"#ffc08a"},rows:[
+    "........","...ooooo","..oppppp",".opwpppp",".opppppp","opppkppp","opppkppp","oprrpppk",
+    ".opppppp",".opppppp","..oppppp","...ooooo"],extra:[]}
+};
+function cuteSprite(ctx,definition,x,y,scale,shadow){
+  const palette=Object.assign({},CUTE_PAL,definition.map||{});
+  definition.rows.forEach((sourceRow,rowIndex)=>{
+    const row=sourceRow.padEnd(8,".")+[...sourceRow.padEnd(8,".")].reverse().join("");
+    for(let column=0;column<16;column++){
+      const pixel=row[column];
+      if(pixel=="."||!pixel)continue;
+      ctx.fillStyle=shadow?"#2a1a5a40":(palette[pixel]||"#f0f");
+      ctx.fillRect(x+column*scale,y+rowIndex*scale,scale,scale)
+    }
+  });
+  (definition.extra||[]).forEach(([px,py,color])=>{
+    ctx.fillStyle=palette[color];
+    ctx.fillRect(x+px,y+py,scale,scale)
+  })
+}
+function cuteSpark(ctx,x,y,color){
+  codexPixel(ctx,x-2,y,5,1,color);codexPixel(ctx,x,y-2,1,5,color)
+}
+function cuteTile(ctx,color,size){
+  const margin=size==80?0:2,paint=(x,y,width,height,fill)=>codexPixel(ctx,x+margin,y+margin,width,height,fill);
+  paint(8,6,64,68,"#5b4aa8");paint(6,8,68,64,"#5b4aa8");
+  paint(10,8,60,64,"#ffffff");paint(8,10,64,60,"#ffffff");
+  paint(12,10,56,60,color);paint(10,12,60,56,color);
+  paint(12,64,56,6,"#5b4aa81c");paint(14,12,26,3,"#ffffffcc");paint(12,15,3,10,"#ffffffaa");
+  cuteSpark(ctx,64+margin,16+margin,"#ffffff");codexDot(ctx,15+margin,63+margin,"#ffffff",2)
+}
 function drawPixelIcon(canvas,kind){
-  const c=canvas.getContext("2d");c.clearRect(0,0,canvas.width,canvas.height);
-  const p=(x,y,w,h,color)=>codexPixel(c,x,y,w,h,color);
-  const navy="#26324f",ice="#dceeff",cyan="#80dbe8",green="#8adcb5",gold="#ffd27f",pink="#ffc3aa",purple="#b99df5";
-  p(8,8,64,64,"#10182d");p(11,11,58,58,navy);p(14,14,52,52,"#1a2540");
-  if(kind=="journey"){
-    p(19,22,17,17,green);p(44,40,17,17,cyan);p(19,43,17,17,"#648dbb");
-    p(36,24,7,5,gold);p(42,30,5,8,gold);p(36,37,8,5,gold);p(32,42,6,9,gold);p(34,52,6,5,gold);
-  }else if(kind=="arcade"){
-    p(24,16,32,49,purple);p(28,20,24,23,navy);p(31,23,18,16,cyan);p(32,49,6,6,gold);p(30,52,10,3,gold);p(45,49,5,5,pink);p(32,62,7,4,ice);p(46,62,7,4,ice);
-  }else if(kind=="friends"){
-    codexCircle(c,31,34,11,cyan);codexCircle(c,50,37,10,pink);p(27,31,3,5,navy);p(34,31,3,5,navy);p(46,34,3,4,navy);p(52,34,3,4,navy);p(25,49,23,8,green);p(45,51,17,7,purple);p(30,42,4,2,navy);p(49,44,4,2,navy);
-  }else if(kind=="guide"||kind=="journal"){
-    p(19,20,24,40,ice);p(42,20,20,40,"#a9cff2");p(39,20,4,40,purple);p(23,26,13,3,cyan);p(23,33,13,2,cyan);p(23,39,13,2,cyan);p(46,27,11,3,cyan);p(46,34,11,2,cyan);p(46,40,11,2,cyan);p(22,58,40,4,gold);
-  }else if(kind=="genes"){
-    for(let i=0;i<5;i++){const y=19+i*9;p(24+(i%2)*18,y,24,3,i%2?cyan:purple);p(22+(i%2)*18,y+3,4,3,ice);p(51-(i%2)*18,y+3,4,3,ice)}
-    p(27,16,5,5,green);p(48,58,5,5,pink);
-  }else if(kind=="pathogens"){
-    codexCircle(c,40,40,20,purple);codexCircle(c,40,40,14,"#dbe6ff");codexCircle(c,40,40,8,cyan);
-    for(let i=0;i<8;i++){const a=i*Math.PI/4,x=Math.round(40+Math.cos(a)*25),y=Math.round(40+Math.sin(a)*25);p(x-2,y-2,5,5,gold)}
-    p(37,36,3,7,navy);p(42,36,3,7,navy);p(37,46,8,3,navy);
-  }else if(kind=="chronicles"){
-    p(23,18,36,47,ice);p(20,21,36,43,"#a9cff2");p(26,26,23,3,purple);p(26,34,24,2,navy);p(26,41,20,2,navy);p(26,48,22,2,navy);p(26,55,14,2,navy);p(52,30,7,7,gold);p(52,44,7,7,cyan);
-  }else if(kind=="achievements"){
-    p(31,16,18,7,gold);p(26,22,28,21,gold);p(21,27,8,16,pink);p(51,27,8,16,pink);p(32,43,7,16,cyan);p(42,43,7,16,purple);p(34,26,12,12,ice);p(38,28,4,8,gold);
-  }else{
-    codexCircle(c,40,40,22,gold);codexCircle(c,40,40,15,ice);p(37,27,6,26,purple);p(29,37,22,6,purple);
+  const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(kind=="journal")kind="guide";
+  const definition=CUTE_ICONS[kind],tileColor=definition?definition.bg:(kind=="genes"?"#d6fff6":"#ffe8d9");
+  cuteTile(ctx,tileColor,80);
+  if(kind=="genes"){
+    for(let y=17;y<=61;y+=3){
+      const phase=(y-17)/44*Math.PI*2.2,x1=40+Math.round(Math.sin(phase)*13),x2=80-x1;
+      if(Math.abs(x1-x2)>6&&(y-17)%6==0)codexPixel(ctx,Math.min(x1,x2)+2,y+1,Math.abs(x1-x2)-3,2,"#ffffff");
+      codexPixel(ctx,x1-3,y-1,7,6,"#3d2c6b");codexPixel(ctx,x2-3,y-1,7,6,"#3d2c6b");
+      codexPixel(ctx,x1-2,y,5,4,"#3fd0ea");codexPixel(ctx,x2-2,y,5,4,"#ff7fa8");
+      codexPixel(ctx,x1-2,y,2,1,"#d9fbff");codexPixel(ctx,x2-2,y,2,1,"#ffe1ee")
+    }
+    return
   }
+  cuteSprite(ctx,definition||CUTE_ICONS._,18,19,3,true);
+  cuteSprite(ctx,definition||CUTE_ICONS._,16,16,3,false)
 }
 function drawBadgeArt(canvas,key,earned){
   const c=canvas.getContext("2d");c.clearRect(0,0,canvas.width,canvas.height);
@@ -118,6 +161,8 @@ function drawGeneArt(canvas,gene){
 function drawPathogenArt(canvas,id){
   const c=canvas.getContext("2d");c.clearRect(0,0,canvas.width,canvas.height);
   const palette={covid:"#80dbe8",ebola:"#ffc3aa",cholera:"#8adcb5",plague:"#b99df5"},color=palette[id]||"#ffd27f";
+  const spriteId={covid:"sars2",ebola:"ebola",cholera:"vibrio",plague:"yersinia"}[id];
+  if(typeof MicrobeSprites!="undefined"&&spriteId){codexPixel(c,6,6,52,52,"#10182d");codexPixel(c,9,9,46,46,"#26324f");const bug=MicrobeSprites.make(spriteId,{autoExpression:false});bug.setExpression("smile");bug.draw(c,4,4,.875);return}
   codexPixel(c,6,6,52,52,"#10182d");codexPixel(c,9,9,46,46,"#26324f");
   if(id=="covid"||id=="ebola"){
     if(id=="covid"){codexCircle(c,32,32,13,color);codexCircle(c,32,32,7,"#dceeff")}

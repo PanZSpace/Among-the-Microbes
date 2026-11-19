@@ -345,7 +345,7 @@
     const base = document.createElement('canvas');
     const bg = base.getContext('2d');
     const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let cur = id || 'gut', cfg = {}, parts = [], W = 0, timer = 0, rt = 0, resizeObserver = null, t0 = performance.now();
+    let cur = id || 'gut', cfg = {}, parts = [], W = 0, timer = 0, rt = 0, t0 = performance.now();
 
     function build() {
       const box = (canvas.parentElement || document.body).getBoundingClientRect();
@@ -375,41 +375,30 @@
     const onResize = () => { clearTimeout(rt); rt = setTimeout(build, 120); };
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
-    if (window.ResizeObserver && canvas.parentElement) {
-      resizeObserver = new ResizeObserver(onResize);
-      resizeObserver.observe(canvas.parentElement);
-    }
     build(); start();
     return {
       set(next) { if (SCENES[next]) { cur = next; build(); } },
       get id() { return cur; },
-      destroy() {
-        clearInterval(timer); clearTimeout(rt);
-        if (resizeObserver) resizeObserver.disconnect();
-        window.removeEventListener('resize', onResize);
-        window.removeEventListener('orientationchange', onResize);
-      },
+      destroy() { clearInterval(timer); clearTimeout(rt); window.removeEventListener('resize', onResize); window.removeEventListener('orientationchange', onResize); },
     };
   }
 
-  let active = null, activeCanvas = null;
-  const HABITAT_SCENES = { uti: 'urinary', airway: 'respiratory' };
+  let active = null;
   function clear() {
-    if (active) active.destroy();
-    if (activeCanvas) activeCanvas.remove();
-    active = null; activeCanvas = null;
+    if (!active) return;
+    active.background.destroy();
+    active.canvas.remove();
+    active = null;
   }
-  function show(container, habitat) {
+  function show(target, id) {
+    if (!(target instanceof Element)) throw new TypeError('A habitat background needs a target element');
     clear();
-    const id = HABITAT_SCENES[habitat] || habitat;
-    if (!container || !SCENES[id]) return null;
     const canvas = document.createElement('canvas');
     canvas.className = 'habitat-pixel-background';
     canvas.setAttribute('aria-hidden', 'true');
-    container.prepend(canvas);
-    activeCanvas = canvas;
-    active = create(canvas, id);
-    return active;
+    target.prepend(canvas);
+    active = { canvas, background: create(canvas, id) };
+    return active.background;
   }
 
   const api = { create, show, clear, names: NAMES, ids: Object.keys(NAMES), _scenes: SCENES, _kit: kit, _rng: rng, H };
